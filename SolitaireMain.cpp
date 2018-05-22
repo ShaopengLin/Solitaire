@@ -23,10 +23,11 @@ int main(int argc, char *argv[])
 
     //al_hide_mouse_cursor(display);
 
-    //initialize background, card spritesheet
+    //initialize background, card, back of card spritesheet
     ALLEGRO_BITMAP *background = al_load_bitmap("background.jpg");
     ALLEGRO_BITMAP *card = al_load_bitmap("cards.png");
     ALLEGRO_BITMAP *backcard = al_load_bitmap("backcard.png");
+    ALLEGRO_BITMAP *cardSide = al_load_bitmap("cardside.png");
 
     //create mouse state
     ALLEGRO_MOUSE_STATE state;
@@ -38,7 +39,7 @@ int main(int argc, char *argv[])
     srand(time(NULL));
 
     Decks cards[52];
-    bool done = false, cardMoving = false;
+    bool done = false, cardMoving = false, mouseOnbackup = false;
     int largestLayer = 0;
 
     //distribute information to the 52 cards
@@ -60,7 +61,7 @@ int main(int argc, char *argv[])
 
 
         //Control cards movement
-        cardMovements(cards,event_queue,state, events, cardMoving, largestLayer);
+        cardMovements(cards,event_queue,state, events, cardMoving, largestLayer, mouseOnbackup);
 
         determineLargestlayer(cards,largestLayer);
 
@@ -83,6 +84,7 @@ int main(int argc, char *argv[])
     //destroy pointers
     al_destroy_display(display);
     al_destroy_bitmap(background);
+    al_destroy_bitmap(backcard);
     al_destroy_bitmap(card);
 
     return 0;

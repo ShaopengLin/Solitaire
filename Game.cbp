@@ -34,6 +34,7 @@
 		<Unit filename="Allegrofunctions.cpp" />
 		<Unit filename="CardStruct.h" />
 		<Unit filename="Cards Subfunctions.cpp" />
+		<Unit filename="CardsSubfunctions page2.cpp" />
 		<Unit filename="Cardsfunctions.cpp" />
 		<Unit filename="SolitaireMain.cpp" />
 		<Extensions>

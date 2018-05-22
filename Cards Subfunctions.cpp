@@ -1,3 +1,5 @@
+//all the functions here are called in another function
+
 #include "CardStruct.h"
 
 //called in cardinfodistribution: make the number that has dealt out 4 times not going be dealt again
@@ -75,7 +77,7 @@ void firstCardfixposition(Decks c[], int i)
     for(j = 0; j < 52; j++) {
         if (j != i) {
 
-            if (inHitbox(c, i, j)) {
+            if (cardHitbox(c, i, j)) {
                 if (c[j].layer.numbers == c[c[j].column.numbers].layer.totalLayer) {
 
                     //determine if the card in the hit box can be stacked relative to the game rule
@@ -95,13 +97,17 @@ void firstCardfixposition(Decks c[], int i)
                     }
                 }
             }
+            else if (kHitbox(c,i,j)){
+                //determine if the card user is dragging is in the K column
+                Kcolumnfixposition(c, i);
+            }
         }
     }
 
     //return to original spot
     if (c[i].returnOrigin == true) {
-        c[i].x = c[i].backupx;
-        c[i].y = c[i].backupy;
+        c[i].x = c[i].originx;
+        c[i].y = c[i].originy;
         c[i].layer.numbers = c[i].layer.origin;
     }
     c[i].returnOrigin = true;
@@ -116,14 +122,14 @@ void followCardfixposition(Decks c[], int i)
 
 
 
-
+    if (c[j].revealed == true){
         if(c[j].follow == true) {
 
             // determine if the dragging card has stacked
             if(c[i].column.numbers == c[j].column.numbers) {
 
-                c[j].x = c[j].backupx;
-                c[j].y = c[j].backupy;
+                c[j].x = c[j].originx;
+                c[j].y = c[j].originy;
                 c[j].layer.numbers = c[j].layer.origin;
                 c[j].x = c[i].x;
                 c[j].y = c[i].y + (c[j].layer.origin - c[i].layer.origin)*30;
@@ -141,21 +147,13 @@ void followCardfixposition(Decks c[], int i)
             }
         }
         c[j].follow = false;
-    }
-}
-
-void animationFlip(Decks c[])
-{
-    int i = 0;
-    for (i = 0; i < 28; i++) {
-        if (c[i].layer.numbers == c[c[i].column.numbers].layer.totalLayer) {
-            c[i].revealed = true;
         }
     }
 }
 
+
 //called in firstCardfixposition: determine if the card user is dragging is in another card's hit box
-bool inHitbox(Decks c[], int i, int j)
+bool cardHitbox(Decks c[], int i, int j)
 {
 
     if (c[i].x >= c[j].x && c[i].x <= c[j].x + 70 && c[i].y >= c[j].y && c[i].y <= c[j].y+100) {
