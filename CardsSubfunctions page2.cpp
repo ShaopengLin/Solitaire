@@ -10,12 +10,16 @@ void changeCardsstate(Decks c[], bool &cardMoving, int largestLayer, int i)
     if (cardMoving == true) {
         ;
     } else {
+
+
         for (j = 0; j < 52; j++) {
+
             if (c[j].revealed == true) {
+
                 if (c[j].column.numbers == c[i].column.numbers) {
 
                     if (c[j].layer.numbers > c[i].layer.numbers) {
-
+                        printf("1");
                         c[j].originx = c[j].x;
                         c[j].originy = c[j].y;
                         c[j].follow = true;
@@ -25,6 +29,8 @@ void changeCardsstate(Decks c[], bool &cardMoving, int largestLayer, int i)
                 }
             }
         }
+
+
 
         // back information for the card user is dragging
         c[i].originx = c[i].x;
@@ -100,18 +106,45 @@ int manageBackupcard(Decks c[], int &largestLayer)
 
 }
 
-void Kcolumnfixposition(Decks c[], int i){
+void columnKfixposition(Decks c[], int i){
     int j = 1;
         for (j = 1; j < 8; j++){
+        if(kHitbox(c,i,j)){
         if (c[i].number == 13){
             if (c[j].layer.totalLayer == 0){
                 c[i].x = c[j].column.dimensionx;
                 c[i].y = c[j].column.dimensiony;
                 c[i].layer.numbers = 1;
                 c[c[i].column.numbers].layer.totalLayer--;
-                c[c[j].column.numbers].layer.totalLayer++;
-                c[i].column.numbers = c[j].column.numbers;
+                c[j].layer.totalLayer++;
+                c[i].column.numbers = j;
+                c[i].returnOrigin = false;
         }
+        }
+
+        }
+        }
+
+
+
+}
+
+void columnAfixposition(Decks c[], int i){
+    int j = 0;
+        for (j = 0; j < 4; j++){
+        if(aHitbox(c,i,j)){
+        if (c[i].number == 1){
+            if (c[columnA+j].layer.totalLayer == 0){
+                c[c[i].column.numbers].layer.totalLayer--;
+                c[i].column.numbers = columnA+j;
+                c[columnA+j].layer.totalLayer++;
+                c[i].x = Ax + (j*75);
+                c[i].y = Ay;
+                c[i].layer.numbers = c[columnA+j].layer.totalLayer;
+                c[i].returnOrigin = false;
+        }
+        }
+
         }
 
         }
@@ -135,4 +168,21 @@ bool kHitbox(Decks c[], int i, int j)
         return false;
     }
 }
+
+bool aHitbox(Decks c[], int i, int j)
+{
+
+    if (c[i].x >= Ax+(j*75) && c[i].x <= Ax+(j*75) + 70 && c[i].y >= Ay && c[i].y <= Ay+100) {
+        return true;
+    } else if (c[i].x + 70 >= Ax+(j*75) && c[i].x + 70 <= Ax+(j*75) + 70 && c[i].y >= Ay && c[i].y <= Ay+100) {
+        return true;
+    } else if (c[i].x >= Ax+(j*75) && c[i].x <= Ax+(j*75) + 70 && c[i].y + 100 >= Ay && c[i].y + 100 <= Ay+100) {
+        return true;
+    } else if (c[i].x + 70 >= Ax+(j*75) && c[i].x + 70 <= Ax+(j*75) + 70 && c[i].y + 100 >= Ay && c[i].y + 100 <= Ay+100) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 

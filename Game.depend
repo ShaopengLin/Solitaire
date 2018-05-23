@@ -2,7 +2,7 @@
 1527007372 source:c:\users\admin\desktop\game\allegrofunctions.cpp
 	"CardStruct.h"
 
-1527015079 c:\users\admin\desktop\game\cardstruct.h
+1527101764 c:\users\admin\desktop\game\cardstruct.h
 	<stdio.h>
 	<stdlib.h>
 	<time.h>
@@ -10,7 +10,7 @@
 	<allegro_native_dialog.h>
 	<allegro_image.h>
 
-1527015368 source:c:\users\admin\desktop\game\cardsfunctions.cpp
+1527099570 source:c:\users\admin\desktop\game\cardsfunctions.cpp
 	"CardStruct.h"
 
 1526845750 source:c:\users\admin\desktop\game\cardsfunctionss2.cpp
@@ -25,9 +25,9 @@
 1527013165 source:c:\users\admin\desktop\game\solitairemain.cpp
 	"CardStruct.h"
 
-1527015369 source:c:\users\admin\desktop\game\cards subfunctions.cpp
+1527041466 source:c:\users\admin\desktop\game\cards subfunctions.cpp
 	"CardStruct.h"
 
-1527015369 source:c:\users\admin\desktop\game\cardssubfunctions page2.cpp
+1527101764 source:c:\users\admin\desktop\game\cardssubfunctions page2.cpp
 	"CardStruct.h"
 

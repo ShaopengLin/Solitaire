@@ -97,10 +97,6 @@ void firstCardfixposition(Decks c[], int i)
                     }
                 }
             }
-            else if (kHitbox(c,i,j)){
-                //determine if the card user is dragging is in the K column
-                Kcolumnfixposition(c, i);
-            }
         }
     }
 
@@ -133,7 +129,6 @@ void followCardfixposition(Decks c[], int i)
                 c[j].layer.numbers = c[j].layer.origin;
                 c[j].x = c[i].x;
                 c[j].y = c[i].y + (c[j].layer.origin - c[i].layer.origin)*30;
-                //printf("\n%d", c[j].layer.numbers);
 
             // return to original position
             } else {

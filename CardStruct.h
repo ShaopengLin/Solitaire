@@ -9,6 +9,9 @@
 #define ScreenHeight 920
 #define backUpx 463
 #define backUpy 74
+#define Ax 8
+#define Ay 74
+#define columnA 8
 
 struct Position {
 
@@ -16,7 +19,7 @@ struct Position {
     int dimensionx;
     int dimensiony;
     int totalLayer = 0;
-    int origin;
+    int origin = 0;
 
 
 
@@ -40,7 +43,7 @@ struct Decks {
     bool follow = false;
     bool returnOrigin = true;
 
-    Position column, layer, A, backupDeck;
+    Position column, layer, backupDeck, A;
 
 };
 
@@ -56,7 +59,8 @@ void cardNumberremove(Decks c[], int &numbersDealt, int i, int thirteenNumbers[]
 void dealCardsIn(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_BITMAP *backcard,  bool &done);
 void cardMovements(Decks c[],ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_MOUSE_STATE &state, ALLEGRO_EVENT events, bool &cardMoving, int &largestLayer, bool &mouseOnbackup);
 void determineLargestlayer(Decks c[], int &largestLayer);
-void Kcolumnfixposition(Decks c[], int i);
+void columnAfixposition(Decks c[], int i);
+void columnKfixposition(Decks c[], int i);
 void firstCardfixposition(Decks c[], int i);
 void followCardfixposition(Decks c[], int i);
 void determinestackable(Decks c[], int i, int j);
@@ -64,7 +68,9 @@ void animationFlip(Decks c[]);
 void changeCardsstate(Decks c[], bool &cardMoving, int largestLayer, int i);
 bool cardHitbox(Decks c[], int i, int j);
 bool kHitbox(Decks c[], int i, int j);
+bool aHitbox(Decks c[], int i, int j);
 int manageBackupcard(Decks c[], int &largestLayer);
+
 
 
 

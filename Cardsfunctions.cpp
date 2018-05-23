@@ -65,7 +65,7 @@ void createCards(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *backcard, int 
 void cardMovements(Decks c[],ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_MOUSE_STATE &state, ALLEGRO_EVENT events, bool &cardMoving, int &largestLayer, bool &mouseOnbackup)
 {
 
-    int i = 0, j = 0;
+    int i = 0, j = 0, firstLayer = true;
 
     al_get_mouse_state(&state);
     for (i = 0; i < 52; i++) {
@@ -78,15 +78,27 @@ void cardMovements(Decks c[],ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_MOUSE_STA
                 //if the card is revealed to the user
                 if (c[i].revealed == true) {
 
-
-
-                        //determine if there are more cards under the card that the user is dragging and back up information for both while changing their state
-                        changeCardsstate(c, cardMoving, largestLayer, i);
+                    for (j = 0; j < 52; j++){
+                        if (j != i){
+                            if (events.mouse.x >= c[j].x && events.mouse.x <= c[j].x + 70 && events.mouse.y >= c[j].y && events.mouse.y <= c[j].y+100){
+                                if(c[j].layer.numbers > c[i].layer.numbers){
+                                    firstLayer = false;
+                                }
+                                else{
+                                    firstLayer = true;
+                                }
+                            }
+                        }
+                    }
+                    if(firstLayer == true){
+                    //determine if there are more cards under the card that the user is dragging and back up information for both while changing their state
+                    changeCardsstate(c, cardMoving, largestLayer, i);
+                    }
                 }
-                }
+            }
 
             //if the mouse is in the area of the backup Deck
-            else if (events.mouse.x >= backUpx && events.mouse.x <= backUpx + 70 && events.mouse.y >= backUpy && events.mouse.y <= backUpy+100){
+            else if (events.mouse.x >= backUpx && events.mouse.x <= backUpx + 70 && events.mouse.y >= backUpy && events.mouse.y <= backUpy+100) {
 
                 mouseOnbackup = true;
             }
@@ -97,8 +109,11 @@ void cardMovements(Decks c[],ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_MOUSE_STA
 
             if(c[i].moving == true) {
 
+                //
+                columnAfixposition(c,i);
+
                 //determine if the card user is dragging is in the K column
-                Kcolumnfixposition(c, i);
+                columnKfixposition(c, i);
 
                 //determine if the card user is dragging can be stack on another card
                 firstCardfixposition(c, i);
@@ -107,7 +122,7 @@ void cardMovements(Decks c[],ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_MOUSE_STA
                 followCardfixposition(c, i);
             }
 
-            if (mouseOnbackup){
+            if (mouseOnbackup) {
                 //controls the distribution and animation of the backup deck
                 manageBackupcard(c, largestLayer);
                 mouseOnbackup = false;
