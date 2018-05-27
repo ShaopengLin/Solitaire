@@ -83,7 +83,7 @@ void firstCardfixposition(Decks c[], int i)
                     //determine if the card in the hit box can be stacked relative to the game rule
                     determinestackable(c, i, j);
                     if (c[j].stackable) {
-
+                        printf("firstCardstack\n");
                         c[i].returnOrigin = false;
                         c[i].x = c[j].x;
                         c[i].y = c[j].y + 30;
@@ -91,6 +91,7 @@ void firstCardfixposition(Decks c[], int i)
                         c[c[i].column.numbers].layer.totalLayer--;
                         c[c[j].column.numbers].layer.totalLayer++;
                         c[i].column.numbers = c[j].column.numbers;
+                        c[j].stackable = false;
                     } else {
                         c[i].returnOrigin = true;
 
@@ -102,6 +103,7 @@ void firstCardfixposition(Decks c[], int i)
 
     //return to original spot
     if (c[i].returnOrigin == true) {
+        printf("firstCardreturn\n");
         c[i].x = c[i].originx;
         c[i].y = c[i].originy;
         c[i].layer.numbers = c[i].layer.origin;
@@ -123,6 +125,7 @@ void followCardfixposition(Decks c[], int i)
 
             // determine if the dragging card has stacked
             if(c[i].column.numbers == c[j].column.numbers) {
+                printf("returned\n");
 
                 c[j].x = c[j].originx;
                 c[j].y = c[j].originy;
@@ -132,7 +135,7 @@ void followCardfixposition(Decks c[], int i)
 
             // return to original position
             } else {
-
+                printf("followed\n");
                 c[c[j].column.numbers].layer.totalLayer--;
                 c[c[i].column.numbers].layer.totalLayer++;
                 c[j].column.numbers = c[i].column.numbers;
@@ -141,6 +144,10 @@ void followCardfixposition(Decks c[], int i)
                 c[j].y = c[i].y + (c[j].layer.origin - c[i].layer.origin)*30;
             }
         }
+        if (c[j].follow == true){
+             printf("%d\n", c[j].layer.numbers);
+        }
+
         c[j].follow = false;
         }
     }

@@ -17,18 +17,42 @@ int main(int argc, char *argv[])
 
     //create and register event queues
     ALLEGRO_EVENT_QUEUE *event_queue = al_create_event_queue();
-
+    //ALLEGRO_TIMER *timer = al_create_timer(1/FPS);
     al_register_event_source(event_queue, al_get_display_event_source(display));
     al_register_event_source(event_queue, al_get_mouse_event_source());
+
+    //al_register_event_source(event_queue, al_get_timer_event_source(timer));
 
     //al_hide_mouse_cursor(display);
 
     //initialize background, card, back of card spritesheet
-    ALLEGRO_BITMAP *background = al_load_bitmap("background.jpg");
+    ALLEGRO_BITMAP *background = al_load_bitmap("background.png");
     ALLEGRO_BITMAP *card = al_load_bitmap("cards.png");
-    ALLEGRO_BITMAP *backcard = al_load_bitmap("backcard.png");
-    ALLEGRO_BITMAP *cardSide = al_load_bitmap("cardside.png");
+    ALLEGRO_BITMAP *pause = al_load_bitmap("pause.png");
+   /*ALLEGRO_BITMAP *newBackground = al_create_bitmap(al_get_bitmap_width(background), al_get_bitmap_height(background));
 
+    al_set_target_bitmap(newBackground);
+
+    al_draw_bitmap(background,0,0,NULL);
+    al_draw_bitmap_region(card,910, 200, 70, 100,backUpx,backUpy, NULL);
+    al_draw_bitmap_region(card,910,100,70,100, Ax, Ay,NULL);
+    al_draw_bitmap_region(card,910,100,70,100, Ax+75, Ay,NULL);
+    al_draw_bitmap_region(card,910,100,70,100, Ax+150, Ay,NULL);
+    al_draw_bitmap_region(card,910,100,70,100, Ax+225, Ay,NULL);
+    al_draw_bitmap_region(card,910,0,70,100,Ax, 210,NULL);
+    al_draw_bitmap_region(card,910,0,70,100,Ax + 75, 210,NULL);
+    al_draw_bitmap_region(card,910,0,70,100,Ax + 150, 210,NULL);
+    al_draw_bitmap_region(card,910,0,70,100,Ax + 225, 210,NULL);
+    al_draw_bitmap_region(card,910,0,70,100,Ax + 300, 210,NULL);
+    al_draw_bitmap_region(card,910,0,70,100,Ax + 375, 210,NULL);
+    al_draw_bitmap_region(card,910,0,70,100,Ax + 450, 210,NULL);
+    al_draw_bitmap(pause,400,20,NULL);
+
+
+    al_save_bitmap("newbackground.png", newBackground);
+
+    al_set_target_bitmap(al_get_backbuffer(display));
+*/
     //create mouse state
     ALLEGRO_MOUSE_STATE state;
 
@@ -45,8 +69,8 @@ int main(int argc, char *argv[])
     //distribute information to the 52 cards
     cardInfodistribution(cards);
 
-   dealCardsIn(cards, card, background, event_queue, backcard,done);
-   determineLargestlayer(cards,largestLayer);
+    dealCardsIn(cards, card, background, event_queue,done);
+    determineLargestlayer(cards,largestLayer);
     //Actual Game
 
     while(!done) {
@@ -71,7 +95,7 @@ int main(int argc, char *argv[])
         animationFlip(cards);
 
         //draws the 52 cards
-        createCards(cards, card, backcard, largestLayer);
+        createCards(cards, card, largestLayer);
 
         // draw to screen
         al_flip_display();
@@ -79,13 +103,14 @@ int main(int argc, char *argv[])
         //clear screen to prevent overlapping
         al_clear_to_color(al_map_rgb(0,0,0));
 
+        winningFunction(cards,done);
+
     }
 
     //destroy pointers
     al_destroy_display(display);
     al_destroy_bitmap(background);
-    al_destroy_bitmap(backcard);
     al_destroy_bitmap(card);
-
+    //al_destroy_timer(timer);
     return 0;
 }
