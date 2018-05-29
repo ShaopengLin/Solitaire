@@ -16,12 +16,13 @@ int main(int argc, char *argv[])
     display = al_create_display(ScreenWidth, ScreenHeight);
 
     //create and register event queues
+    ALLEGRO_FONT *font = al_load_font("Roboto-Medium.ttf",20,NULL);
     ALLEGRO_EVENT_QUEUE *event_queue = al_create_event_queue();
-    //ALLEGRO_TIMER *timer = al_create_timer(1/FPS);
+    ALLEGRO_TIMER *timer = al_create_timer(1.0/FPS);
     al_register_event_source(event_queue, al_get_display_event_source(display));
     al_register_event_source(event_queue, al_get_mouse_event_source());
 
-    //al_register_event_source(event_queue, al_get_timer_event_source(timer));
+    al_register_event_source(event_queue, al_get_timer_event_source(timer));
 
     //al_hide_mouse_cursor(display);
 
@@ -65,14 +66,19 @@ int main(int argc, char *argv[])
     Decks cards[52];
     bool done = false, cardMoving = false, mouseOnbackup = false;
     int largestLayer = 0;
+    int seconds = 0, minutes = 0;
+    int movesCounter = 0;
+    int score = 0;
 
     //distribute information to the 52 cards
     cardInfodistribution(cards);
+
 
     dealCardsIn(cards, card, background, event_queue,done);
     determineLargestlayer(cards,largestLayer);
     //Actual Game
 
+    al_start_timer(timer);
     while(!done) {
         ALLEGRO_EVENT events;
         al_wait_for_event(event_queue, &events);
@@ -85,7 +91,7 @@ int main(int argc, char *argv[])
 
 
         //Control cards movement
-        cardMovements(cards,event_queue,state, events, cardMoving, largestLayer, mouseOnbackup);
+        cardMovements(cards,event_queue,state, events, cardMoving, largestLayer, mouseOnbackup, movesCounter, score);
 
         determineLargestlayer(cards,largestLayer);
 
@@ -97,6 +103,13 @@ int main(int argc, char *argv[])
         //draws the 52 cards
         createCards(cards, card, largestLayer);
 
+        drawTime(font, timer, seconds, minutes);
+
+        drawMovescount(font,movesCounter);
+
+        drawScore(font, score);
+
+
         // draw to screen
         al_flip_display();
 
@@ -105,9 +118,12 @@ int main(int argc, char *argv[])
 
         winningFunction(cards,done);
 
+
+
     }
 
     //destroy pointers
+    al_destroy_font(font);
     al_destroy_display(display);
     al_destroy_bitmap(background);
     al_destroy_bitmap(card);

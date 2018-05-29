@@ -37,6 +37,7 @@
 		<Unit filename="CardsSubfunctions page2.cpp" />
 		<Unit filename="Cardsfunctions.cpp" />
 		<Unit filename="SolitaireMain.cpp" />
+		<Unit filename="fileFunctions.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

@@ -46,7 +46,7 @@ void changeCardsstate(Decks c[], bool &cardMoving, int largestLayer, int i)
 }
 
 //called in cardMovement: controls the distribution and animation of the backup deck
-int manageBackupcard(Decks c[], int &largestLayer)
+int manageBackupcard(Decks c[], int &largestLayer, int &movesCounter)
 {
     ALLEGRO_BITMAP *background = al_load_bitmap("background.png");
     ALLEGRO_BITMAP *card = al_load_bitmap("cards.png");
@@ -85,14 +85,14 @@ int manageBackupcard(Decks c[], int &largestLayer)
         c[c[0].backupDeck.totalLayer].revealed = true;
 
         //animation
-        for (int j = 0; j < 20; j++) {
-            c[c[0].backupDeck.totalLayer].x -= (float)75/20;
+
+            c[c[0].backupDeck.totalLayer].x -= (float)75;
             printb(background);
             createCards(c,card,largestLayer);
-            al_flip_display();
-            al_clear_to_color(al_map_rgb(0,0,0));
+            movesCounter++;
 
-        }
+
+
         c[0].backupDeck.totalLayer--;
 
 
@@ -120,7 +120,7 @@ int manageBackupcard(Decks c[], int &largestLayer)
 
 }
 
-void columnKfixposition(Decks c[], int i)
+void columnKfixposition(Decks c[], int i, int &movesCounter)
 {
     int j = 1;
     for (j = 1; j < 8; j++) {
@@ -134,6 +134,7 @@ void columnKfixposition(Decks c[], int i)
                     c[c[i].column.numbers].layer.totalLayer--;
                     c[j].layer.totalLayer++;
                     c[i].column.numbers = j;
+                    movesCounter++;
                     c[i].returnOrigin = false;
                 }
             }
@@ -145,7 +146,7 @@ void columnKfixposition(Decks c[], int i)
 
 }
 
-int columnAfixposition(Decks c[], int i)
+int columnAfixposition(Decks c[], int i, int &movesCounter, int &score)
 {
     int j = 0, k = 0;
     for (j = 0; j < 4; j++) {
@@ -167,6 +168,8 @@ int columnAfixposition(Decks c[], int i)
                         c[i].x = Ax + (j*75);
                         c[i].y = Ay;
                         c[i].layer.numbers = c[columnA+j].layer.totalLayer;
+                        movesCounter++;
+                        score += 10;
                         c[i].returnOrigin = false;
                     }
                 } else {
@@ -178,6 +181,8 @@ int columnAfixposition(Decks c[], int i)
                     c[i].x = Ax + (j*75);
                     c[i].y = Ay;
                     c[i].layer.numbers = c[columnA+j].layer.totalLayer;
+                    movesCounter++;
+                    score += 10;
                     c[i].returnOrigin = false;
                 }
             }

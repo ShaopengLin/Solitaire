@@ -71,7 +71,7 @@ void determinestackable(Decks c[], int i, int j)
 }
 
 //called in cardMovement: determine if a card stacks on another card or return to the original position
-void firstCardfixposition(Decks c[], int i)
+void firstCardfixposition(Decks c[], int i, int &movesCounter)
 {
     int j = 0;
     for(j = 0; j < 52; j++) {
@@ -91,6 +91,7 @@ void firstCardfixposition(Decks c[], int i)
                         c[c[i].column.numbers].layer.totalLayer--;
                         c[c[j].column.numbers].layer.totalLayer++;
                         c[i].column.numbers = c[j].column.numbers;
+                        movesCounter++;
                         c[j].stackable = false;
                     } else {
                         c[i].returnOrigin = true;

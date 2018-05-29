@@ -3,6 +3,9 @@
 #include <time.h>
 #include <allegro.h>
 #include <allegro_native_dialog.h>
+#include <allegro_font.h>
+#include <allegro_ttf.h>
+
 #include <allegro_image.h>
 
 #define ScreenWidth 540
@@ -12,7 +15,7 @@
 #define Ax 8
 #define Ay 90
 #define columnA 8
-#define FPS 10
+#define FPS 1
 struct Position {
 
     int numbers = 0;
@@ -57,11 +60,11 @@ void cardInfodistribution (Decks c[]);
 void cardSuitremoveAnddistribute(Decks c[], int fourSuits[], int suitsDealt);
 void cardNumberremove(Decks c[], int &numbersDealt, int i, int thirteenNumbers[]);
 void dealCardsIn(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, ALLEGRO_EVENT_QUEUE *event_queue,  bool &done);
-void cardMovements(Decks c[],ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_MOUSE_STATE &state, ALLEGRO_EVENT events, bool &cardMoving, int &largestLayer, bool &mouseOnbackup);
+void cardMovements(Decks c[],ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_MOUSE_STATE &state, ALLEGRO_EVENT events, bool &cardMoving, int &largestLayer, bool &mouseOnbackup, int &movesCounter, int &score);
 void determineLargestlayer(Decks c[], int &largestLayer);
-int columnAfixposition(Decks c[], int i);
-void columnKfixposition(Decks c[], int i);
-void firstCardfixposition(Decks c[], int i);
+int columnAfixposition(Decks c[], int i, int &movesCounter, int &score);
+void columnKfixposition(Decks c[], int i, int &movesCounter);
+void firstCardfixposition(Decks c[], int i, int &movesCounter);
 void followCardfixposition(Decks c[], int i);
 void determinestackable(Decks c[], int i, int j);
 void animationFlip(Decks c[]);
@@ -70,7 +73,11 @@ bool cardHitbox(Decks c[], int i, int j);
 bool kHitbox(Decks c[], int i, int j);
 bool aHitbox(Decks c[], int i, int j);
 bool winningFunction(Decks c[], bool &done);
-int manageBackupcard(Decks c[], int &largestLayer);
+int manageBackupcard(Decks c[], int &largestLayer, int &movesCounter);
+void drawTime(ALLEGRO_FONT *font ,ALLEGRO_TIMER *timer ,int seconds,int minutes);
+void drawMovescount(ALLEGRO_FONT *font, int movesCounter);
+void drawScore(ALLEGRO_FONT *font, int score);
+int writeHighscore();
 
 
 

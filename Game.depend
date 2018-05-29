@@ -1,16 +1,18 @@
 # depslib dependency file v1.0
-1527456909 source:c:\users\admin\desktop\game\allegrofunctions.cpp
+1527561801 source:c:\users\admin\desktop\game\allegrofunctions.cpp
 	"CardStruct.h"
 
-1527456909 c:\users\admin\desktop\game\cardstruct.h
+1527561765 c:\users\admin\desktop\game\cardstruct.h
 	<stdio.h>
 	<stdlib.h>
 	<time.h>
 	<allegro.h>
 	<allegro_native_dialog.h>
+	<allegro_font.h>
+	<allegro_ttf.h>
 	<allegro_image.h>
 
-1527456935 source:c:\users\admin\desktop\game\cardsfunctions.cpp
+1527561773 source:c:\users\admin\desktop\game\cardsfunctions.cpp
 	"CardStruct.h"
 
 1526845750 source:c:\users\admin\desktop\game\cardsfunctionss2.cpp
@@ -22,12 +24,15 @@
 	<allegro_image.h>
 	"CardStruct.h"
 
-1527457018 source:c:\users\admin\desktop\game\solitairemain.cpp
+1527561765 source:c:\users\admin\desktop\game\solitairemain.cpp
 	"CardStruct.h"
 
-1527195619 source:c:\users\admin\desktop\game\cards subfunctions.cpp
+1527551519 source:c:\users\admin\desktop\game\cards subfunctions.cpp
 	"CardStruct.h"
 
-1527287953 source:c:\users\admin\desktop\game\cardssubfunctions page2.cpp
+1527561785 source:c:\users\admin\desktop\game\cardssubfunctions page2.cpp
+	"CardStruct.h"
+
+1527561779 source:c:\users\admin\desktop\game\filefunctions.cpp
 	"CardStruct.h"
 
