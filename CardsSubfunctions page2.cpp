@@ -46,7 +46,7 @@ void changeCardsstate(Decks c[], bool &cardMoving, int largestLayer, int i)
 }
 
 //called in cardMovement: controls the distribution and animation of the backup deck
-int manageBackupcard(Decks c[], int &largestLayer, int &movesCounter)
+int manageBackupcard(Decks c[], int &largestLayer, int &movesCounter, int &score)
 {
     ALLEGRO_BITMAP *background = al_load_bitmap("background.png");
     ALLEGRO_BITMAP *card = al_load_bitmap("cards.png");
@@ -111,6 +111,7 @@ int manageBackupcard(Decks c[], int &largestLayer, int &movesCounter)
             layerCount--;
         }
         layerCount = 24;
+        score -= 5;
 
     }
 
@@ -227,7 +228,7 @@ bool aHitbox(Decks c[], int i, int j)
     }
 }
 
-bool winningFunction(Decks c[], bool &done)
+bool determineWon(Decks c[])
 {
 
     int counter = 0;
@@ -235,9 +236,35 @@ bool winningFunction(Decks c[], bool &done)
         counter += c[columnA+i].layer.totalLayer;
     }
     if (counter == 52) {
-        done = true;
+        return true;
+    }
+    else {
+        return false;
     }
 
+
+}
+
+bool pauseHitbox(ALLEGRO_EVENT events){
+
+     if (events.mouse.x >= PAUSEx && events.mouse.x <= PAUSEx + 126 && events.mouse.y >= PAUSEy && events.mouse.y <= PAUSEy+35) {
+        return true;
+
+    } else {
+        return false;
+    }
+
+}
+
+bool resumeHitbox(ALLEGRO_EVENT events){
+
+
+    if (events.mouse.x >= RESUMEx && events.mouse.x <= RESUMEx + 200 && events.mouse.y >= RESUMEy && events.mouse.y <= RESUMEy+40) {
+        return true;
+
+    } else {
+        return false;
+    }
 
 }
 

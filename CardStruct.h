@@ -16,29 +16,35 @@
 #define Ay 90
 #define columnA 8
 #define FPS 1
+#define PAUSEx 400
+#define PAUSEy 20
+#define NEWGAMEx 300
+#define NEWGAMEy 340
+#define RESUMEx 40
+#define RESUMEy 340
 struct Position {
 
-    int numbers = 0;
-    int dimensionx;
-    int dimensiony;
-    int totalLayer = 0;
-    int origin = 0;
-    int suit;
+    int numbers = {0};
+    int dimensionx = {0};
+    int dimensiony = {0};
+    int totalLayer = {0};
+    int origin = {0};
+    int suit = {0};
 
 
 };
 
 struct Decks {
 
-    int number;
+    int number = 0;
     //1 = spades 2 = hearts, 3 = clubs, 4 = diamonds
-    int suit;
+    int suit = {0};
     int counterNumber[14] = {0};
     int counterSuit[5] = {0};
-    float x = 0;
-    float originx = 0;
-    float y = 920;
-    float originy = 0;
+    float x = {0};
+    float originx = {0};
+    float y = {920};
+    float originy = {0};
     bool moving = false;
     bool revealed = false;
     bool active = true;
@@ -72,13 +78,22 @@ void changeCardsstate(Decks c[], bool &cardMoving, int largestLayer, int i);
 bool cardHitbox(Decks c[], int i, int j);
 bool kHitbox(Decks c[], int i, int j);
 bool aHitbox(Decks c[], int i, int j);
-bool winningFunction(Decks c[], bool &done);
-int manageBackupcard(Decks c[], int &largestLayer, int &movesCounter);
-void drawTime(ALLEGRO_FONT *font ,ALLEGRO_TIMER *timer ,int seconds,int minutes);
+bool determineWon(Decks c[]);
+int manageBackupcard(Decks c[], int &largestLayer, int &movesCounter ,int &score);
+int drawMinutes(ALLEGRO_FONT *font, ALLEGRO_TIMER *timer, int seconds);
+int drawSeconds(ALLEGRO_FONT *font,ALLEGRO_TIMER *timer, int seconds);
 void drawMovescount(ALLEGRO_FONT *font, int movesCounter);
 void drawScore(ALLEGRO_FONT *font, int score);
-int writeHighscore();
-
+void writeMoves(FILE *writeInscore, int movesCounter);
+void writeScore(FILE *writeInscore, int score);
+void writeSeconds(FILE *writeInscore, ALLEGRO_TIMER *timer, int &seconds);
+void writeQuickest(FILE *writeInscore, int quickest);
+void writeLeastmove(FILE *writeInscore, int leastMove);
+void writeHighscore(FILE *writeInscore, int highScore);
+void saveTofile(Decks c[],FILE *writeInsave, FILE *writeInscore, ALLEGRO_TIMER *timer, int seconds, int quickest, int score, int highScore, int movesCounter, int  leastMove);
+bool pauseHitbox(ALLEGRO_EVENT events);
+void drawPausescreen(Decks c[],ALLEGRO_BITMAP *pauseButton, ALLEGRO_BITMAP *pasueScreen);
+bool resumeHitbox(ALLEGRO_EVENT events);
 
 
 

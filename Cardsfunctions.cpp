@@ -133,7 +133,7 @@ void cardMovements(Decks c[],ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_MOUSE_STA
 
                 if (events.mouse.x >= backUpx && events.mouse.x <= backUpx + 70 && events.mouse.y >= backUpy && events.mouse.y <= backUpy+100) {
                     //controls the distribution and animation of the backup deck
-                    manageBackupcard(c, largestLayer, movesCounter);
+                    manageBackupcard(c, largestLayer, movesCounter, score);
                     mouseOnbackup = false;
                 }
             }
@@ -268,6 +268,7 @@ void animationFlip(Decks c[])
         }
     }
 }
+
 
 
 
