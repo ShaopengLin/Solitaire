@@ -21,6 +21,7 @@ void cardInfodistribution (Decks c[])
         //calls to check if all 13 of a suit is used up or all 4 numbers are used up
         cardNumberremove(c,numbersDealt, i, thirteenNumbers);
     }
+
     //suit
     cardSuitremoveAnddistribute(c,fourSuits,suitsDealt);
 }
@@ -30,9 +31,13 @@ void determineLargestlayer(Decks c[], int &largestLayer)
 {
     int i = 0;
     largestLayer = c[0].layer.numbers;
+
     for (i = 0; i < 52; i++) {
+
         if (c[i].layer.numbers > largestLayer) {
+
             largestLayer = c[i].layer.numbers;
+
         }
     }
 }
@@ -48,18 +53,20 @@ void createCards(Decks c[], ALLEGRO_BITMAP *card, int largestLayer)
         for (i = 0; i < 52; i++) {
 
             if (c[i].layer.numbers == j) {
+
                 if (c[i].revealed) {
 
                     al_draw_bitmap_region(card, (c[i].number - 1) * 70, (c[i].suit -1) * 100, 70, 100,c[i].x, c[i].y, NULL);
+
                 } else {
+
                     al_draw_bitmap_region(card,910, 300, 70, 100,c[i].x,c[i].y, NULL);
+
                 }
             }
         }
     }
 }
-
-
 
 //controls the cards' movement
 void cardMovements(Decks c[],ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_MOUSE_STATE &state, ALLEGRO_EVENT events, bool &cardMoving, int &largestLayer, bool &mouseOnbackup, int &movesCounter,  int &score)
@@ -79,31 +86,42 @@ void cardMovements(Decks c[],ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_MOUSE_STA
                 if (c[i].revealed == true) {
 
                     for (j = 0; j < 52; j++) {
-                        if (j != i) {
-                            if (c[j].revealed){
-                            if (events.mouse.x >= c[j].x && events.mouse.x <= c[j].x + 70 && events.mouse.y >= c[j].y && events.mouse.y <= c[j].y+100) {
-                                if(c[j].layer.numbers > c[i].layer.numbers) {
-                                    firstLayer = false;
 
+                        if (j != i) {
+
+                            if (c[j].revealed) {
+
+                                if (events.mouse.x >= c[j].x && events.mouse.x <= c[j].x + 70 && events.mouse.y >= c[j].y && events.mouse.y <= c[j].y+100) {
+
+                                    if(c[j].layer.numbers > c[i].layer.numbers) {
+
+                                        firstLayer = false;
+
+                                    }
                                 }
-                            }
                             }
                         }
                     }
                     if(firstLayer == true) {
+
                         //determine if there are more cards under the card that the user is dragging and back up information for both while changing their state
                         changeCardsstate(c, cardMoving, largestLayer, i);
-                    }
-                    else{
+
+                    } else {
+
                         firstLayer = true;
+
                     }
                 }
             }
 
             //if the mouse is in the area of the backup Deck
-            else if (events.mouse.x >= backUpx && events.mouse.x <= backUpx + 70 && events.mouse.y >= backUpy && events.mouse.y <= backUpy+100) {
+            else if (events.mouse.x >= BACKUPx && events.mouse.x <= BACKUPx + 70 && events.mouse.y >= BACKUPy && events.mouse.y <= BACKUPy+100) {
+
                 if (!cardMoving) {
+
                     mouseOnbackup = true;
+
                 }
             }
         }
@@ -122,8 +140,6 @@ void cardMovements(Decks c[],ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_MOUSE_STA
                 //determine if the card user is dragging can be stack on another card
                 firstCardfixposition(c, i, movesCounter);
 
-
-
                 //determine where the cards following the dragging card should go based on the dragging card information
                 followCardfixposition(c, i);
 
@@ -131,9 +147,11 @@ void cardMovements(Decks c[],ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_MOUSE_STA
 
             if(mouseOnbackup) {
 
-                if (events.mouse.x >= backUpx && events.mouse.x <= backUpx + 70 && events.mouse.y >= backUpy && events.mouse.y <= backUpy+100) {
+                if (events.mouse.x >= BACKUPx && events.mouse.x <= BACKUPx + 70 && events.mouse.y >= BACKUPy && events.mouse.y <= BACKUPy+100) {
+
                     //controls the distribution and animation of the backup deck
                     manageBackupcard(c, largestLayer, movesCounter, score);
+
                     mouseOnbackup = false;
                 }
             }
@@ -147,22 +165,35 @@ void cardMovements(Decks c[],ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_MOUSE_STA
         if(c[i].moving == true) {
 
             if (c[i].x > ScreenWidth) {
+
                 c[i].x = ScreenWidth;
+
             } else if(c[i].x < 0) {
+
                 c[i].x = 0;
+
             } else if (c[i].y < 0) {
+
                 c[i].y = 0;
+
             } else if(c[i].y > ScreenHeight) {
+
                 c[i].y = ScreenWidth;
+
             } else {
+
                 c[i].x += events.mouse.dx;
                 c[i].y += events.mouse.dy;
+
             }
 
             for (j = 0; j< 52; j++) {
+
                 if (c[j].follow) {
+
                     c[j].x = c[i].x;
                     c[j].y = c[i].y + (c[j].layer.origin - c[i].layer.origin)*30;
+
                 }
             }
         }
@@ -175,42 +206,38 @@ void dealCardsIn(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, AL
 {
 
 
-    int j, i, k, layerCount = 24;
+    int j, i, k;
     int endOfrow = 0, multiplier = 0, rowlimit = 7;
-    float movespeedx, movespeedy;
+    float moveSpeedx, moveSpeedy;
+
+    resetPlayareacardsInfo(c);
 
     //gives identity for the 24 backup deck up top
-    for (i = 28; i < 52; i++) {
-        c[i].x = backUpx;
-        c[i].y = backUpy;
-        c[i].column.numbers = 0;
-        c[i].layer.numbers = layerCount;
-        c[0].backupDeck.totalLayer = i;
-        c[i].revealed = false;
-        layerCount--;
-    }
-    layerCount = 24;
-
+    resetBackupcardsInfo(c);
 
     //refreshes each cards' identity after it has been dealt
     for (i = 0; i < 28; i++) {
 
         //every row, there will be one card less
         if (endOfrow == rowlimit) {
+
             multiplier++;
             rowlimit--;
             endOfrow = 0;
+
         }
 
         //move speed based on the card's position to where they should go
-        movespeedx = (c[i].x - (8+(75*endOfrow)+(75*multiplier))) / 30;
-        movespeedy = (c[i].y - (210 + (30*multiplier))) / 30;
+        moveSpeedx = (c[i].x - (8+(75*endOfrow)+(75*multiplier))) / 30;
+        moveSpeedy = (c[i].y - (210 + (30*multiplier))) / 30;
 
         // first card of a column will be revealed
         if (endOfrow == 0) {
+
             c[i].revealed = true;
 
         } else {
+
             c[i].revealed = false;
 
         }
@@ -218,15 +245,22 @@ void dealCardsIn(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, AL
         //move the card to a position on screen and fixing the card's position
         for (j = 0; j < 30; j++) {
 
-            c[i].x -= movespeedx;
-            c[i].y -= movespeedy;
+            c[i].x -= moveSpeedx;
+            c[i].y -= moveSpeedy;
+
             printb(background);
+
             if(j == 29) {
+
                 if(c[i].x != (8+(75*endOfrow)+(75*multiplier))) {
+
                     (8+(75*endOfrow)+(80*multiplier));
+
                 }
                 if((c[i].y != (210 + (30*multiplier)))) {
+
                     c[i].y = (210 + (30*multiplier));
+
                 }
             }
 
@@ -236,14 +270,18 @@ void dealCardsIn(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, AL
                 if (c[k].revealed) {
 
                     al_draw_bitmap_region(card, (c[k].number - 1) * 70, (c[k].suit -1) * 100, 70, 100,c[k].x, c[k].y, NULL);
+
                 } else {
+
                     al_draw_bitmap_region(card, 910, 300, 70, 100,c[k].x,c[k].y, NULL);
+
                 }
             }
 
             al_flip_display();
             al_clear_to_color(al_map_rgb(0,0,0));
         }
+
         endOfrow++;
 
         //distributing layer information to cards
@@ -255,14 +293,16 @@ void dealCardsIn(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, AL
     }
 }
 
-void animationFlip(Decks c[])
+void revealCard(Decks c[])
 {
 
     for (int i = 0; i < 28; i++) {
-        if (c[c[i].column.numbers].layer.totalLayer == c[i].layer.numbers) {
-            if(c[i].revealed == false) {
-                c[i].revealed = true;
 
+        if (c[c[i].column.numbers].layer.totalLayer == c[i].layer.numbers) {
+
+            if(c[i].revealed == false) {
+
+                c[i].revealed = true;
 
             }
         }

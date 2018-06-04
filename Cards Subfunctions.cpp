@@ -9,18 +9,22 @@ void cardNumberremove(Decks c[], int &numbersDealt, int i, int thirteenNumbers[]
 
     //number
     if (c[0].counterNumber[c[i].number] == 4) {
+
         for (int j = 0; j < 13; j++) {
 
             //moves the number out of the randomizing range
             if (thirteenNumbers[j] == c[i].number) {
+
                 temp = thirteenNumbers[j];
                 thirteenNumbers[j] = thirteenNumbers[12-numbersDealt];
                 thirteenNumbers[12 - numbersDealt] = temp;
+
                 if (numbersDealt == 12) {
-                    ;
+
                 } else {
                     numbersDealt++;
                 }
+
                 c[0].counterNumber[c[i].number] = 0;
                 break;
 
@@ -35,22 +39,31 @@ void cardSuitremoveAnddistribute(Decks c[], int fourSuits[], int suitsDealt)
 
     int temp;
     for (int i = 1; i <= 13; i++) {
+
         for (int j = 0; j < 52; j++) {
+
             if (c[j].number == i) {
 
                 c[j].suit = fourSuits[rand()%(4 - suitsDealt)];
+
                 for (int k = 0; k < 4; k++) {
-                        //moves the suit out of the randomizing range for this number
+
+                    //moves the suit out of the randomizing range for this number
                     if (fourSuits[k] == c[j].suit) {
+
                         temp = fourSuits[k];
                         fourSuits[k] = fourSuits[3-suitsDealt];
                         fourSuits[3 - suitsDealt] = temp;
+
                     }
                 }
+
                 suitsDealt++;
             }
         }
+
         suitsDealt = 0;
+
     }
 }
 
@@ -75,6 +88,7 @@ void firstCardfixposition(Decks c[], int i, int &movesCounter)
 {
     int j = 0;
     for(j = 0; j < 52; j++) {
+
         if (j != i) {
 
             if (cardHitbox(c, i, j)) {
@@ -82,17 +96,13 @@ void firstCardfixposition(Decks c[], int i, int &movesCounter)
 
                     //determine if the card in the hit box can be stacked relative to the game rule
                     determinestackable(c, i, j);
+
                     if (c[j].stackable) {
-                        printf("firstCardstack\n");
-                        c[i].returnOrigin = false;
-                        c[i].x = c[j].x;
-                        c[i].y = c[j].y + 30;
-                        c[i].layer.numbers = c[j].layer.numbers + 1;
-                        c[c[i].column.numbers].layer.totalLayer--;
-                        c[c[j].column.numbers].layer.totalLayer++;
-                        c[i].column.numbers = c[j].column.numbers;
+
+                        firstCardstack(c,i,j);
+
                         movesCounter++;
-                        c[j].stackable = false;
+
                     } else {
                         c[i].returnOrigin = true;
 
@@ -103,13 +113,8 @@ void firstCardfixposition(Decks c[], int i, int &movesCounter)
     }
 
     //return to original spot
-    if (c[i].returnOrigin == true) {
-        printf("firstCardreturn\n");
-        c[i].x = c[i].originx;
-        c[i].y = c[i].originy;
-        c[i].layer.numbers = c[i].layer.origin;
-    }
-    c[i].returnOrigin = true;
+    firstCardreturn(c, i);
+
 }
 
 //called in cardMovement: based on the first card's information, determine if the cards under it should stack with the first card or return to their original position with the first card
@@ -119,58 +124,76 @@ void followCardfixposition(Decks c[], int i)
     int j = 0;
     for (j = 0; j < 52; j++) {
 
+        if (c[j].revealed == true) {
 
+            if(c[j].follow == true) {
 
-    if (c[j].revealed == true){
-        if(c[j].follow == true) {
+                // determine if the dragging card has stacked
+                if(c[i].column.numbers == c[j].column.numbers) {
 
-            // determine if the dragging card has stacked
-            if(c[i].column.numbers == c[j].column.numbers) {
-                printf("returned\n");
+                    printf("returned\n");
 
-                c[j].x = c[j].originx;
-                c[j].y = c[j].originy;
-                c[j].layer.numbers = c[j].layer.origin;
-                c[j].x = c[i].x;
-                c[j].y = c[i].y + (c[j].layer.origin - c[i].layer.origin)*30;
+                    followCardreturn(c, i, j);
 
-            // return to original position
-            } else {
-                printf("followed\n");
-                c[c[j].column.numbers].layer.totalLayer--;
-                c[c[i].column.numbers].layer.totalLayer++;
-                c[j].column.numbers = c[i].column.numbers;
-                c[j].layer.numbers = c[i].layer.numbers + (c[j].layer.origin - c[i].layer.origin);
-                c[j].x = c[i].x;
-                c[j].y = c[i].y + (c[j].layer.origin - c[i].layer.origin)*30;
+                // return to original position
+                } else {
+
+                    printf("followed\n");
+                    followCardstack(c, i, j);
+
+                }
             }
-        }
-        if (c[j].follow == true){
-             printf("%d\n", c[j].layer.numbers);
-        }
 
-        c[j].follow = false;
+            if (c[j].follow == true) {
+
+                printf("%d\n", c[j].layer.numbers);
+
+            }
+
+            c[j].follow = false;
+
         }
     }
 }
 
-
-//called in firstCardfixposition: determine if the card user is dragging is in another card's hit box
-bool cardHitbox(Decks c[], int i, int j)
+void resetPlayareacardsInfo(Decks c[])
 {
 
-    if (c[i].x >= c[j].x && c[i].x <= c[j].x + 70 && c[i].y >= c[j].y && c[i].y <= c[j].y+100) {
-        return true;
-    } else if (c[i].x + 70 >= c[j].x && c[i].x + 70 <= c[j].x + 70 && c[i].y >= c[j].y && c[i].y <= c[j].y+100) {
-        return true;
-    } else if (c[i].x >= c[j].x && c[i].x <= c[j].x + 70 && c[i].y + 100 >= c[j].y && c[i].y + 100 <= c[j].y+100) {
-        return true;
-    } else if (c[i].x + 70 >= c[j].x && c[i].x + 70 <= c[j].x + 70 && c[i].y + 100 >= c[j].y && c[i].y + 100 <= c[j].y+100) {
-        return true;
-    } else {
-        return false;
+    for (int i = 0; i < 28; i++) {
+
+        c[i].x = 0;
+        c[i].y = 920;
+        c[i].layer.numbers = 0;
+        c[c[i].column.numbers].layer.totalLayer = 0;
+
     }
 }
+
+void resetBackupcardsInfo(Decks c[])
+{
+
+    int layerCount = 24;
+
+    for (int i = 28; i < 52; i++) {
+
+        if(c[i].column.numbers == 0) {
+
+            c[i].x = BACKUPx;
+            c[i].y = BACKUPy;
+            c[i].column.numbers = 0;
+            c[i].layer.numbers = layerCount;
+            c[0].backupDeck.totalLayer = i;
+            c[i].revealed = false;
+
+        }
+
+        layerCount--;
+
+    }
+}
+
+
+
 
 
 

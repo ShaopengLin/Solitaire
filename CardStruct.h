@@ -10,11 +10,11 @@
 
 #define ScreenWidth 540
 #define ScreenHeight 920
-#define backUpx 458
-#define backUpy 90
+#define BACKUPx 458
+#define BACKUPy 90
 #define Ax 8
 #define Ay 90
-#define columnA 8
+#define COLUMNA 8
 #define FPS 1
 #define PAUSEx 400
 #define PAUSEy 20
@@ -73,17 +73,17 @@ void columnKfixposition(Decks c[], int i, int &movesCounter);
 void firstCardfixposition(Decks c[], int i, int &movesCounter);
 void followCardfixposition(Decks c[], int i);
 void determinestackable(Decks c[], int i, int j);
-void animationFlip(Decks c[]);
+void revealCard(Decks c[]);
 void changeCardsstate(Decks c[], bool &cardMoving, int largestLayer, int i);
 bool cardHitbox(Decks c[], int i, int j);
 bool kHitbox(Decks c[], int i, int j);
 bool aHitbox(Decks c[], int i, int j);
 bool determineWon(Decks c[]);
 int manageBackupcard(Decks c[], int &largestLayer, int &movesCounter ,int &score);
-int drawMinutes(ALLEGRO_FONT *font, ALLEGRO_TIMER *timer, int seconds);
-int drawSeconds(ALLEGRO_FONT *font,ALLEGRO_TIMER *timer, int seconds);
+void drawMinutes(ALLEGRO_FONT *font, ALLEGRO_TIMER *timer, int seconds);
+void drawSeconds(ALLEGRO_FONT *font,ALLEGRO_TIMER *timer, int seconds);
 void drawMovescount(ALLEGRO_FONT *font, int movesCounter);
-void drawScore(ALLEGRO_FONT *font, int score);
+void drawScore(ALLEGRO_FONT *font, int &score);
 void writeMoves(FILE *writeInscore, int movesCounter);
 void writeScore(FILE *writeInscore, int score);
 void writeSeconds(FILE *writeInscore, ALLEGRO_TIMER *timer, int &seconds);
@@ -94,6 +94,22 @@ void saveTofile(Decks c[],FILE *writeInsave, FILE *writeInscore, ALLEGRO_TIMER *
 bool pauseHitbox(ALLEGRO_EVENT events);
 void drawPausescreen(Decks c[],ALLEGRO_BITMAP *pauseButton, ALLEGRO_BITMAP *pasueScreen);
 bool resumeHitbox(ALLEGRO_EVENT events);
+bool startHitbox(ALLEGRO_EVENT events);
+void resumeGame(Decks c[], ALLEGRO_BITMAP *pauseButton, ALLEGRO_BITMAP *pauseScreen, ALLEGRO_TIMER *timer,ALLEGRO_TIMER * pauseTimer, ALLEGRO_BITMAP *resume);
+void startNewgame(Decks c[], ALLEGRO_BITMAP *pauseButton, ALLEGRO_BITMAP *pauseScreen, ALLEGRO_TIMER *timer,ALLEGRO_TIMER * pauseTimer, ALLEGRO_BITMAP *newGame);
+void readFromfile(Decks c[],ALLEGRO_DISPLAY *display,FILE *readInsave, FILE *readInscore, ALLEGRO_TIMER *timer, int &seconds, int &score, int &movesCounter, char saved[]);
+void resetPlayareacardsInfo(Decks c[]);
+void resetBackupcardsInfo(Decks c[]);
+void rearrageFiles(FILE *writeInsave, FILE *writeInscore, FILE *readInsave, FILE *readInscore);
+void fixScore(int &score);
+void firstCardstack(Decks c[], int i, int j);
+void firstCardreturn(Decks c[], int i);
+void followCardstack(Decks c[], int i, int j);
+void followCardreturn(Decks c[],int i, int j);
+void makeCardfollow(Decks c[], int j, int largestLayer);
+bool allowCardtomove(Decks c[], int i, int largestLayer);
+void stackAcardonA(Decks c[], int i, int j);
+void stackNonAcardonA(Decks c[], int i, int j);
 
 
 

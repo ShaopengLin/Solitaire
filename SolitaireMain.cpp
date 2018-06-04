@@ -20,42 +20,24 @@ int main(int argc, char *argv[])
     FILE *readInscore = fopen("scorefile.txt", "r");
     FILE *writeInscore = fopen("replacescore.txt", "w");
 
-    //create and register event queues
     ALLEGRO_FONT *font = al_load_font("Roboto-Medium.ttf",20,NULL);
     ALLEGRO_EVENT_QUEUE *event_queue = al_create_event_queue();
     ALLEGRO_EVENT_QUEUE *pause_queue = al_create_event_queue();
     ALLEGRO_TIMER *timer = al_create_timer(1.0/FPS);
     ALLEGRO_TIMER *pauseTimer = al_create_timer(1.0/FPS);
+
     al_register_event_source(event_queue, al_get_display_event_source(display));
     al_register_event_source(pause_queue, al_get_display_event_source(display));
     al_register_event_source(event_queue, al_get_mouse_event_source());
-
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
-
-    //al_hide_mouse_cursor(display);
 
     //initialize background, card, back of card spritesheet
     ALLEGRO_BITMAP *background = al_load_bitmap("background.png");
     ALLEGRO_BITMAP *card = al_load_bitmap("cards.png");
     ALLEGRO_BITMAP *pauseButton = al_load_bitmap("pause.png");
-    ALLEGRO_BITMAP *medal = al_load_bitmap("medal.jpg");
     ALLEGRO_BITMAP *pauseScreen = al_load_bitmap("pausescreen.png");
     ALLEGRO_BITMAP *newGame = al_load_bitmap("newgame.png");
     ALLEGRO_BITMAP *resume = al_load_bitmap("resume.png");
-    /*ALLEGRO_BITMAP *newBackground = al_create_bitmap(al_get_bitmap_width(background), al_get_bitmap_height(background));
-
-    al_set_target_bitmap(newBackground);
-
-
-     al_draw_bitmap(pauseScreen,0,0,NULL);
-     al_draw_bitmap(resume, 30,240,NULL);
-     al_draw_bitmap(newgame, 290, 240,NULL);
-
-
-     al_save_bitmap("newpause.png", newBackground);
-
-     al_set_target_bitmap(al_get_backbuffer(display));
-     */
 
     //create mouse state
     ALLEGRO_MOUSE_STATE state;
@@ -77,7 +59,6 @@ int main(int argc, char *argv[])
     int score = 0;
     int highScore = 0, quickest = 0, leastMove = 0;
 
-
     rewind(readInsave);
     rewind(readInscore);
     fscanf(readInscore, "%d", &quickest);
@@ -85,92 +66,96 @@ int main(int argc, char *argv[])
     fscanf(readInscore, "%d", &leastMove);
     fscanf(readInscore, "%s", saved);
 
-    if (strcmp(saved, "saved") == 0) {
-        if (al_show_native_message_box(display,"Message", "Unfinished Game","Do you want to continue from your last game?", NULL,ALLEGRO_MESSAGEBOX_YES_NO) == 1) {
-            fscanf(readInscore, "%d", &seconds);
-            fscanf(readInscore, "%d", &score);
-            fscanf(readInscore, "%d", &movesCounter);
-            for (int i = 0; i < 52; i++) {
-                fread(&cards[i], sizeof(cards[i]), 1, readInsave);
+    //distribute information to the 52 cards
+    cardInfodistribution(cards);
+    dealCardsIn(cards, card, background, event_queue,done);
 
-            }
-        } else {
-
-            //distribute information to the 52 cards
-            cardInfodistribution(cards);
-
-
-            dealCardsIn(cards, card, background, event_queue,done);
-        }
-
-    } else {
-
-        //distribute information to the 52 cards
-        cardInfodistribution(cards);
-
-
-        dealCardsIn(cards, card, background, event_queue,done);
-
-    }
-
-
+    readFromfile(cards, display,readInsave, readInscore,timer,seconds, score, movesCounter, saved);
 
     //Actual Game
 
     determineLargestlayer(cards,largestLayer);
     al_start_timer(timer);
+
     while(!done) {
+
         ALLEGRO_EVENT events;
         al_wait_for_event(event_queue, &events);
-
 
         done = determineWon(cards);
 
         //if clicked X button top right
         if(events.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
+
             done = true;
+
         }
+
         al_get_mouse_state(&state);
+
         if (al_mouse_button_down(&state, state.buttons & 1)) {
+
             if (pauseHitbox(events)) {
+
                 al_stop_timer(timer);
+
                 al_start_timer(pauseTimer);
 
                 while (1) {
+
                     al_wait_for_event(event_queue, &events);
+
                     if(events.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
+
                         al_start_timer(timer);
                         al_stop_timer(pauseTimer);
+
                         done = true;
                         break;
+
                     }
+
                     printb(background);
+
                     drawMinutes(font,timer,seconds);
+
                     drawSeconds(font, timer, seconds);
 
                     drawMovescount(font,movesCounter);
 
                     drawScore(font, score);
-                    createCards(cards, card, largestLayer);
-                    al_get_mouse_state(&state);
-                    if(al_mouse_button_down(&state, state.buttons & 1)){
 
-                        if(resumeHitbox(events) == true){
-                            al_draw_bitmap(resume, RESUMEx, RESUMEy, NULL);
-                            al_start_timer(timer);
-                            al_stop_timer(pauseTimer);
-                            al_flip_display();
-                            al_clear_to_color(al_map_rgb(0,0,0));
+                    createCards(cards, card, largestLayer);
+
+                    al_get_mouse_state(&state);
+                    if(al_mouse_button_down(&state, state.buttons & 1)) {
+
+                        if(resumeHitbox(events) == true) {
+
+                            resumeGame(cards, pauseButton, pauseScreen, timer, pauseTimer,resume);
                             break;
 
+                        } else if(startHitbox(events)) {
+
+                            startNewgame(cards, pauseButton, pauseScreen, timer, pauseTimer,newGame);
+
+                            movesCounter = 0;
+                            seconds = 0;
+                            score = 0;
+
+                            cardInfodistribution(cards);
+                            dealCardsIn(cards, card, background, event_queue,done);
+                            break;
                         }
                     }
-                    drawPausescreen(cards, pauseButton, pauseScreen);
-                }
 
+                    drawPausescreen(cards, pauseButton, pauseScreen);
+
+                    al_flip_display();
+                    al_clear_to_color(al_map_rgb(0,0,0));
+                }
             }
         }
-
 
         //Control cards movement
         cardMovements(cards,event_queue,state, events, cardMoving, largestLayer, mouseOnbackup, movesCounter, score);
@@ -180,48 +165,29 @@ int main(int argc, char *argv[])
         //print back ground
         printb(background);
 
-        animationFlip(cards);
+        revealCard(cards);
 
         //draws the 52 cards
         createCards(cards, card, largestLayer);
 
         drawMinutes(font,timer,seconds);
+
         drawSeconds(font, timer, seconds);
 
         drawMovescount(font,movesCounter);
 
         drawScore(font, score);
 
-
         // draw to screen
         al_flip_display();
 
         //clear screen to prevent overlapping
         al_clear_to_color(al_map_rgb(0,0,0));
-
-
-
-
-
-
-
     }
-
 
     saveTofile(cards, writeInsave, writeInscore, timer, seconds,quickest,score,highScore,movesCounter,leastMove);
 
-
-
-
-    fclose(writeInsave);
-    fclose(readInsave);
-    fclose(readInscore);
-    fclose(writeInscore);
-    remove("savefile.txt");
-    rename("replacesave.txt", "savefile.txt");
-    remove("scorefile.txt");
-    rename("replacescore.txt", "scorefile.txt");
-
+    rearrageFiles(writeInsave, writeInscore, readInsave, readInscore);
 
     //destroy pointers
     al_destroy_font(font);
