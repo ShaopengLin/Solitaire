@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
                 al_rest(0.2);
                 //distribute information to the 52 cards
                 cardInfodistribution(cards);
-                dealCardsIn(cards, card, background, event_queue,done);
+                dealCardsIn(cards, card, background, event_queue);
                 break;
             }
         }
@@ -120,14 +120,15 @@ int main(int argc, char *argv[])
 
         al_start_timer(pauseTimer);
 
-        while (1){
+        score = calculateUnltimateScore(score, seconds, timer);
+        /*while (1){
         al_wait_for_event(event_queue, &events);
         if(events.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
 
             done = true;
             break;
 
-        }
+        }*/
 
         printb(background);
 
@@ -144,12 +145,17 @@ int main(int argc, char *argv[])
         determineBeathighscores(medal, timer,score, highScore,seconds, quickest, movesCounter, leastMove);
 
         winningScreen(cards, winScreen);
-        }
-        al_stop_timer(timer);
 
-        al_start_timer(pauseTimer);
+        al_flip_display();
+        al_clear_to_color(al_map_rgb(0,0,0));
 
+        if (al_show_native_message_box(display,"Message", "Do you want to play again?", "Yes to replay, No to quit", NULL, ALLEGRO_MESSAGEBOX_YES_NO)== 1){
+        startNewgame(cards, movesCounter, seconds, score, timer, pauseTimer,card, background, event_queue);
         }
+        else {
+        }
+        }
+
 
         done = determineWon(cards);
 
@@ -207,14 +213,9 @@ int main(int argc, char *argv[])
 
                         } else if(startHitbox(events)) {
 
-                            startNewgame(cards, pauseButton, pauseScreen, timer, pauseTimer,newGame);
+                            drawNewgamePressed(cards, pauseButton, pauseScreen,newGame);
 
-                            movesCounter = 0;
-                            seconds = 0;
-                            score = 0;
-
-                            cardInfodistribution(cards);
-                            dealCardsIn(cards, card, background, event_queue,done);
+                            startNewgame(cards, movesCounter, seconds, score, timer, pauseTimer,card, background, event_queue);
                             break;
                         }
                     }

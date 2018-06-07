@@ -79,16 +79,13 @@ void resumeGame(Decks c[], ALLEGRO_BITMAP *pauseButton, ALLEGRO_BITMAP *pauseScr
 
 }
 
-void startNewgame(Decks c[], ALLEGRO_BITMAP *pauseButton, ALLEGRO_BITMAP *pauseScreen, ALLEGRO_TIMER *timer,ALLEGRO_TIMER * pauseTimer, ALLEGRO_BITMAP *newGame)
+void drawNewgamePressed(Decks c[], ALLEGRO_BITMAP *pauseButton, ALLEGRO_BITMAP *pauseScreen, ALLEGRO_BITMAP *newGame)
 {
     drawPausescreen(c, pauseButton, pauseScreen);
     al_draw_bitmap(newGame, NEWGAMEx, NEWGAMEy, NULL);
     al_flip_display();
     al_clear_to_color(al_map_rgb(0,0,0));
     al_rest(0.1);
-    al_set_timer_count(timer, 0);
-    al_stop_timer(pauseTimer);
-    al_start_timer(timer);
 
 }
 
@@ -106,8 +103,6 @@ void winningScreen(Decks c[], ALLEGRO_BITMAP *winScreen)
 
 
     al_draw_bitmap(winScreen, 0, 300, NULL);
-    al_flip_display();
-    al_clear_to_color(al_map_rgb(0,0,0));
 
 
 }
@@ -132,4 +127,28 @@ void determineBeathighscores(ALLEGRO_BITMAP *medal, ALLEGRO_TIMER *timer, int sc
     }
 
 }
+
+int calculateUnltimateScore(int score, int seconds, ALLEGRO_TIMER *timer){
+
+
+    return score+ (240- (seconds+al_get_timer_count(timer)))*100;
+
+
+}
+
+void startNewgame(Decks c[], int &movesCounter, int &seconds, int &score, ALLEGRO_TIMER *timer, ALLEGRO_TIMER *pauseTimer, ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, ALLEGRO_EVENT_QUEUE *event_queue){
+
+                            movesCounter = 0;
+                            seconds = 0;
+                            score = 0;
+
+                            al_set_timer_count(timer, 0);
+                            al_stop_timer(pauseTimer);
+                            al_start_timer(timer);
+                            cardInfodistribution(c);
+                            dealCardsIn(c, card, background, event_queue);
+
+}
+
+
 

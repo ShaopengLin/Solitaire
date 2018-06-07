@@ -109,10 +109,10 @@ void firstCardfixposition(Decks c[], int i, int &movesCounter)
                         movesCounter++;
 
 
-                    } else {
+                    }else{
                         c[i].returnOrigin = true;
-
                     }
+
                 }
             }
         }

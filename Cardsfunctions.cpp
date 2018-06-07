@@ -154,6 +154,9 @@ void cardMovements(Decks c[],ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_MOUSE_STA
 
                     mouseOnbackup = false;
                 }
+                else{
+                    mouseOnbackup = false;
+                }
             }
 
             c[i].moving = false;
@@ -202,7 +205,7 @@ void cardMovements(Decks c[],ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_MOUSE_STA
 
 
 //print the cards on screen at the start of the game
-void dealCardsIn(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, ALLEGRO_EVENT_QUEUE *event_queue, bool &done)
+void dealCardsIn(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, ALLEGRO_EVENT_QUEUE *event_queue)
 {
 
 
@@ -239,8 +242,8 @@ void dealCardsIn(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, AL
         }
 
         //move speed based on the card's position to where they should go
-        moveSpeedx = (c[i].x - (8+(75*endOfrow)+(75*multiplier))) / 1;
-        moveSpeedy = (c[i].y - (210 + (30*multiplier))) / 1;
+        moveSpeedx = (c[i].x - (8+(75*endOfrow)+(75*multiplier))) / 15;
+        moveSpeedy = (c[i].y - (210 + (30*multiplier))) / 15;
 
         // first card of a column will be revealed
         if (endOfrow == 0) {
@@ -254,14 +257,14 @@ void dealCardsIn(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, AL
         }
 
         //move the card to a position on screen and fixing the card's position
-        for (j = 0; j < 1; j++) {
+        for (j = 0; j < 15; j++) {
 
             c[i].x -= moveSpeedx;
             c[i].y -= moveSpeedy;
 
             printb(background);
 
-            if(j == 1) {
+            if(j == 14) {
 
                 if(c[i].x != (8+(75*endOfrow)+(75*multiplier))) {
 
@@ -347,6 +350,7 @@ int autoComplete(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, AL
                                     animationAutocomplete(c, card,background,timer,font,i,j,largestLayer,score,movesCounter,seconds);
 
                                     stackAcardonA(c, i, j);
+                                    c[i].returnOrigin = true;
                                     score += 10;
 
 
@@ -357,7 +361,7 @@ int autoComplete(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, AL
                                     animationAutocomplete(c, card,background,timer,font,i,j,largestLayer,score,movesCounter,seconds);
 
                                     stackNonAcardonA(c, i, j);
-
+                                    c[i].returnOrigin = true;
                                     score += 10;
 
 
