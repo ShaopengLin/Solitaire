@@ -21,6 +21,7 @@ int main(int argc, char *argv[])
     FILE *writeInscore = fopen("replacescore.txt", "w");
 
     ALLEGRO_FONT *font = al_load_font("Roboto-Medium.ttf",20,NULL);
+    ALLEGRO_FONT *startingFont = al_load_font("Hug Me Tight - TTF.ttf", 40, NULL);
     ALLEGRO_EVENT_QUEUE *event_queue = al_create_event_queue();
     ALLEGRO_EVENT_QUEUE *pause_queue = al_create_event_queue();
     ALLEGRO_TIMER *timer = al_create_timer(1.0/FPS);
@@ -38,6 +39,8 @@ int main(int argc, char *argv[])
     ALLEGRO_BITMAP *pauseScreen = al_load_bitmap("pausescreen.png");
     ALLEGRO_BITMAP *newGame = al_load_bitmap("newgame.png");
     ALLEGRO_BITMAP *resume = al_load_bitmap("resume.png");
+    ALLEGRO_BITMAP *winScreen = al_load_bitmap("winscreen.png");
+    ALLEGRO_BITMAP *medal = al_load_bitmap("medal.png");
 
     //create mouse state
     ALLEGRO_MOUSE_STATE state;
@@ -51,7 +54,7 @@ int main(int argc, char *argv[])
 
 
     Decks cards[52];
-    bool done = false, cardMoving = false, mouseOnbackup = false;
+    bool done = false, cardMoving = false, mouseOnbackup = false, asked = false;
     char saved[10];
     int largestLayer = 0;
     int seconds = 0;
@@ -66,11 +69,34 @@ int main(int argc, char *argv[])
     fscanf(readInscore, "%d", &leastMove);
     fscanf(readInscore, "%s", saved);
 
-    //distribute information to the 52 cards
-    cardInfodistribution(cards);
-    dealCardsIn(cards, card, background, event_queue,done);
+    if (readFromfile(cards, display,readInsave, readInscore,timer,seconds, score, movesCounter, saved) != 0) {
 
-    readFromfile(cards, display,readInsave, readInscore,timer,seconds, score, movesCounter, saved);
+        al_draw_text(startingFont, al_map_rgb(255,255,255), 150, ScreenHeight/2, NULL, "Tap to Start");
+        al_flip_display();
+        al_clear_to_color(al_map_rgb(0,0,0));
+
+        while (1) {
+
+            ALLEGRO_EVENT events;
+            al_wait_for_event(event_queue, &events);
+
+
+            if(events.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
+
+            return 0;
+
+
+            }
+            al_get_mouse_state(&state);
+            if (al_mouse_button_down(&state, state.buttons & 1)){
+                al_rest(0.2);
+                //distribute information to the 52 cards
+                cardInfodistribution(cards);
+                dealCardsIn(cards, card, background, event_queue,done);
+                break;
+            }
+        }
+    }
 
     //Actual Game
 
@@ -78,11 +104,55 @@ int main(int argc, char *argv[])
     al_start_timer(timer);
 
     while(!done) {
-
         ALLEGRO_EVENT events;
         al_wait_for_event(event_queue, &events);
 
+        if (!asked) {
+            if (autoComplete(cards,card,background,timer,font,largestLayer,score,movesCounter,seconds,display) == 2) {
+
+                asked = true;
+            }
+        }
+
+        if(determineWon(cards)){
+
+        al_stop_timer(timer);
+
+        al_start_timer(pauseTimer);
+
+        while (1){
+        al_wait_for_event(event_queue, &events);
+        if(events.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
+
+            done = true;
+            break;
+
+        }
+
+        printb(background);
+
+        drawMinutes(font,timer,seconds);
+
+        drawSeconds(font, timer, seconds);
+
+        drawMovescount(font,movesCounter);
+
+        drawScore(font, score);
+
+        createCards(cards, card, largestLayer);
+
+        determineBeathighscores(medal, timer,score, highScore,seconds, quickest, movesCounter, leastMove);
+
+        winningScreen(cards, winScreen);
+        }
+        al_stop_timer(timer);
+
+        al_start_timer(pauseTimer);
+
+        }
+
         done = determineWon(cards);
+
 
         //if clicked X button top right
         if(events.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
@@ -184,6 +254,7 @@ int main(int argc, char *argv[])
         //clear screen to prevent overlapping
         al_clear_to_color(al_map_rgb(0,0,0));
     }
+
 
     saveTofile(cards, writeInsave, writeInscore, timer, seconds,quickest,score,highScore,movesCounter,leastMove);
 

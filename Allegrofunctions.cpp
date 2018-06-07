@@ -100,3 +100,36 @@ void fixScore(int &score)
     }
 
 }
+
+void winningScreen(Decks c[], ALLEGRO_BITMAP *winScreen)
+{
+
+
+    al_draw_bitmap(winScreen, 0, 300, NULL);
+    al_flip_display();
+    al_clear_to_color(al_map_rgb(0,0,0));
+
+
+}
+
+void determineBeathighscores(ALLEGRO_BITMAP *medal, ALLEGRO_TIMER *timer, int score, int &highScore, int seconds, int &quickest, int movesCounter, int leastMove)
+{
+
+    if ((al_get_timer_count(timer)+seconds) < quickest || quickest == 0) {
+        quickest = seconds;
+        al_draw_bitmap(medal, 260, 10,NULL);
+    }
+
+    if (highScore <= score) {
+
+        highScore = score;
+        al_draw_bitmap(medal, 10, 10,NULL );
+    }
+    if (movesCounter < leastMove || leastMove == 0) {
+        leastMove = movesCounter;
+        al_draw_bitmap(medal, 135,10,NULL);
+
+    }
+
+}
+

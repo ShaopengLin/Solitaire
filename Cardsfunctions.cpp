@@ -213,7 +213,18 @@ void dealCardsIn(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, AL
     resetPlayareacardsInfo(c);
 
     //gives identity for the 24 backup deck up top
-    resetBackupcardsInfo(c);
+    int layerCount = 24;
+
+    for (i = 28; i < 52; i++) {
+
+        c[i].x = BACKUPx;
+        c[i].y = BACKUPy;
+        c[i].column.numbers = 0;
+        c[i].layer.numbers = layerCount;
+        c[0].backupDeck.totalLayer = i;
+        c[i].revealed = false;
+        layerCount--;
+    }
 
     //refreshes each cards' identity after it has been dealt
     for (i = 0; i < 28; i++) {
@@ -228,8 +239,8 @@ void dealCardsIn(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, AL
         }
 
         //move speed based on the card's position to where they should go
-        moveSpeedx = (c[i].x - (8+(75*endOfrow)+(75*multiplier))) / 30;
-        moveSpeedy = (c[i].y - (210 + (30*multiplier))) / 30;
+        moveSpeedx = (c[i].x - (8+(75*endOfrow)+(75*multiplier))) / 1;
+        moveSpeedy = (c[i].y - (210 + (30*multiplier))) / 1;
 
         // first card of a column will be revealed
         if (endOfrow == 0) {
@@ -243,14 +254,14 @@ void dealCardsIn(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, AL
         }
 
         //move the card to a position on screen and fixing the card's position
-        for (j = 0; j < 30; j++) {
+        for (j = 0; j < 1; j++) {
 
             c[i].x -= moveSpeedx;
             c[i].y -= moveSpeedy;
 
             printb(background);
 
-            if(j == 29) {
+            if(j == 1) {
 
                 if(c[i].x != (8+(75*endOfrow)+(75*multiplier))) {
 
@@ -306,6 +317,59 @@ void revealCard(Decks c[])
 
             }
         }
+    }
+}
+
+int autoComplete(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, ALLEGRO_TIMER *timer, ALLEGRO_FONT *font, int &largestLayer, int &score, int &movesCounter, int &seconds, ALLEGRO_DISPLAY *display)
+{
+
+    for (int i = 0; i < 52; i++) {
+
+        if (!c[i].revealed || c[i].column.numbers == 0) {
+
+            return 0;
+
+        }
+
+    }
+    if (al_show_native_message_box(display,"Message", "Congratulations","Do you want to Auto Complete?", NULL,ALLEGRO_MESSAGEBOX_YES_NO) == 1) {
+        while (!determineWon(c)) {
+            for (int i = 0; i < 52; i++) {
+                for (int j = 0; j < 4; j++) {
+                    if (c[i].number == c[COLUMNA+j].layer.totalLayer+1) {
+                        if (c[i].suit == c[COLUMNA+j].layer.suit) {
+                            if (c[i].column.numbers < COLUMNA) {
+                                if (c[COLUMNA+j].layer.totalLayer < 1) {
+
+
+                                    c[i].layer.numbers = c[i].number;
+                                    determineLargestlayer(c, largestLayer);
+                                    animationAutocomplete(c, card,background,timer,font,i,j,largestLayer,score,movesCounter,seconds);
+
+                                    stackAcardonA(c, i, j);
+                                    score += 10;
+
+
+                                } else {
+
+                                    c[i].layer.numbers = c[i].number;
+                                    determineLargestlayer(c, largestLayer);
+                                    animationAutocomplete(c, card,background,timer,font,i,j,largestLayer,score,movesCounter,seconds);
+
+                                    stackNonAcardonA(c, i, j);
+
+                                    score += 10;
+
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }else{
+        return 2;
     }
 }
 

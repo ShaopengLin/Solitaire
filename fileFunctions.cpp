@@ -93,7 +93,7 @@ void saveTofile(Decks c[],FILE *writeInsave, FILE *writeInscore, ALLEGRO_TIMER *
     }
 }
 
-void readFromfile(Decks c[],ALLEGRO_DISPLAY *display, FILE *readInsave, FILE *readInscore, ALLEGRO_TIMER *timer, int &seconds, int &score, int &movesCounter, char saved[])
+int readFromfile(Decks c[],ALLEGRO_DISPLAY *display, FILE *readInsave, FILE *readInscore, ALLEGRO_TIMER *timer, int &seconds, int &score, int &movesCounter, char saved[])
 {
 
     if (strcmp(saved, "saved") == 0) {
@@ -108,6 +108,10 @@ void readFromfile(Decks c[],ALLEGRO_DISPLAY *display, FILE *readInsave, FILE *re
                 fread(&c[i], sizeof(c[i]), 1, readInsave);
 
             }
+            return 0;
+        }
+        else{
+            return 1;
         }
     }
 }

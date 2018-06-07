@@ -76,8 +76,12 @@ void determinestackable(Decks c[], int i, int j)
         if ((c[j].suit % 2) != (c[i].suit % 2)) {
 
             if (c[j].number == c[i].number + 1) {
+                if (c[i].column.numbers > COLUMNA && c[j].column.numbers > COLUMNA){
 
-                c[j].stackable = true;
+                }
+                else{
+                    c[j].stackable = true;
+                }
             }
         }
     }
@@ -99,9 +103,11 @@ void firstCardfixposition(Decks c[], int i, int &movesCounter)
 
                     if (c[j].stackable) {
 
+
                         firstCardstack(c,i,j);
 
                         movesCounter++;
+
 
                     } else {
                         c[i].returnOrigin = true;
@@ -159,7 +165,7 @@ void followCardfixposition(Decks c[], int i)
 void resetPlayareacardsInfo(Decks c[])
 {
 
-    for (int i = 0; i < 28; i++) {
+    for (int i = 0; i < 52; i++) {
 
         c[i].x = 0;
         c[i].y = 920;

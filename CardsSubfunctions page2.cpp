@@ -67,7 +67,6 @@ int manageBackupcard(Decks c[], int &largestLayer, int &movesCounter, int &score
         printb(background);
 
         createCards(c,card,largestLayer);
-
         movesCounter++;
 
         c[0].backupDeck.totalLayer--;
@@ -133,12 +132,13 @@ int columnAfixposition(Decks c[], int i, int &movesCounter, int &score)
 
                             }
                         }
-                            stackNonAcardonA(c, i, j);
-                            movesCounter++;
-                            score += 10;
 
-                    }
-                } else {
+                        stackNonAcardonA(c, i, j);
+                        movesCounter++;
+                        score += 10;
+                }
+            }
+             else {
 
                     stackAcardonA(c, i, j);
 
@@ -146,11 +146,10 @@ int columnAfixposition(Decks c[], int i, int &movesCounter, int &score)
                     score += 10;
 
                 }
-            }
         }
     }
 }
-
+}
 void firstCardstack(Decks c[], int i, int j)
 {
 
@@ -228,6 +227,7 @@ void stackNonAcardonA(Decks c[], int i, int j)
     c[i].y = Ay;
     c[i].layer.numbers = c[COLUMNA+j].layer.totalLayer;
     c[i].returnOrigin = false;
+
 }
 
 void stackAcardonA(Decks c[], int i, int j)
@@ -242,5 +242,44 @@ void stackAcardonA(Decks c[], int i, int j)
     c[i].y = Ay;
     c[i].layer.numbers = c[COLUMNA+j].layer.totalLayer;
     c[i].returnOrigin = false;
+
+
+}
+
+void animationAutocomplete(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, ALLEGRO_TIMER *timer, ALLEGRO_FONT *font, int i, int j, int largestLayer, int &score, int &movesCounter, int &seconds)
+{
+
+    float moveSpeedx, moveSpeedy;
+
+
+    moveSpeedx = (c[i].x - (Ax+(j*75)))/10;
+
+
+    moveSpeedy = (c[i].y - Ay)/10;
+
+    for (int k = 0; k < 10; k++) {
+
+        c[i].x -= moveSpeedx;
+        c[i].y -= moveSpeedy;
+
+
+        printb(background);
+
+        drawMinutes(font,timer,seconds);
+
+        drawSeconds(font, timer, seconds);
+
+        drawMovescount(font,movesCounter);
+
+        drawScore(font, score);
+
+        createCards(c, card,largestLayer);
+
+        al_flip_display();
+
+        al_clear_to_color(al_map_rgb(0,0,0));
+    }
+
+
 
 }
