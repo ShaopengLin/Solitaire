@@ -52,6 +52,7 @@ struct Decks {
     bool stackable = false;
     bool follow = false;
     bool returnOrigin = true;
+    bool scored = false;
 
     Position column, layer, backupDeck;
 
@@ -114,7 +115,7 @@ void stackNonAcardonA(Decks c[], int i, int j);
 int autoComplete(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, ALLEGRO_TIMER *timer, ALLEGRO_FONT *font, int &largestLayer, int &score, int &movesCounter, int &seconds,ALLEGRO_DISPLAY *display);
 void animationAutocomplete(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, ALLEGRO_TIMER *timer, ALLEGRO_FONT *font, int i, int j, int largestLayer, int &score, int &movesCounter, int &seconds);
 void winningScreen(Decks c[], ALLEGRO_BITMAP *winScreen);
-void determineBeathighscores(ALLEGRO_BITMAP *medal, ALLEGRO_TIMER *timer, int score, int &highScore, int seconds, int &quickest, int movesCounter, int leastMove);
+void determineBeathighscores(ALLEGRO_BITMAP *medal, ALLEGRO_TIMER *timer, int score, int &highScore, int seconds, int &quickest, int movesCounter, int &leastMove);
 int calculateUnltimateScore(int score, int seconds, ALLEGRO_TIMER *timer);
 void startNewgame(Decks c[], int &movesCounter, int &seconds, int &score, ALLEGRO_TIMER *timer, ALLEGRO_TIMER *pauseTimer,  ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, ALLEGRO_EVENT_QUEUE *event_queue);
 

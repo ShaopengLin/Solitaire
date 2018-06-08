@@ -169,6 +169,8 @@ void resetPlayareacardsInfo(Decks c[])
 
         c[i].x = 0;
         c[i].y = 920;
+        c[i].scored = false;
+        c[i].returnOrigin = true;
         c[i].layer.numbers = 0;
         c[c[i].column.numbers].layer.totalLayer = 0;
 

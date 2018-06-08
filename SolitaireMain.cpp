@@ -121,6 +121,7 @@ int main(int argc, char *argv[])
         al_start_timer(pauseTimer);
 
         score = calculateUnltimateScore(score, seconds, timer);
+
         /*while (1){
         al_wait_for_event(event_queue, &events);
         if(events.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {

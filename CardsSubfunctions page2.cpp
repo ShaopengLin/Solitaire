@@ -135,20 +135,25 @@ int columnAfixposition(Decks c[], int i, int &movesCounter, int &score)
 
                         stackNonAcardonA(c, i, j);
                         movesCounter++;
-                        score += 10;
-                }
-            }
-             else {
+                        if(!c[i].scored) {
+                            score += 10;
+                            c[i].scored = true;
+                        }
+                    }
+                } else {
 
                     stackAcardonA(c, i, j);
 
                     movesCounter++;
-                    score += 10;
+                    if(!c[i].scored) {
+                        score += 10;
+                        c[i].scored = true;
+                    }
 
                 }
+            }
         }
     }
-}
 }
 void firstCardstack(Decks c[], int i, int j)
 {

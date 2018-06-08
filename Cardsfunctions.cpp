@@ -350,7 +350,7 @@ int autoComplete(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, AL
                                     animationAutocomplete(c, card,background,timer,font,i,j,largestLayer,score,movesCounter,seconds);
 
                                     stackAcardonA(c, i, j);
-                                    c[i].returnOrigin = true;
+
                                     score += 10;
 
 
@@ -361,7 +361,7 @@ int autoComplete(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, AL
                                     animationAutocomplete(c, card,background,timer,font,i,j,largestLayer,score,movesCounter,seconds);
 
                                     stackNonAcardonA(c, i, j);
-                                    c[i].returnOrigin = true;
+
                                     score += 10;
 
 

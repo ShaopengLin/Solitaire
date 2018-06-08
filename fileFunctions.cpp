@@ -109,8 +109,7 @@ int readFromfile(Decks c[],ALLEGRO_DISPLAY *display, FILE *readInsave, FILE *rea
 
             }
             return 0;
-        }
-        else{
+        } else {
             return 1;
         }
     }

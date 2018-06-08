@@ -107,11 +107,11 @@ void winningScreen(Decks c[], ALLEGRO_BITMAP *winScreen)
 
 }
 
-void determineBeathighscores(ALLEGRO_BITMAP *medal, ALLEGRO_TIMER *timer, int score, int &highScore, int seconds, int &quickest, int movesCounter, int leastMove)
+void determineBeathighscores(ALLEGRO_BITMAP *medal, ALLEGRO_TIMER *timer, int score, int &highScore, int seconds, int &quickest, int movesCounter, int &leastMove)
 {
 
     if ((al_get_timer_count(timer)+seconds) < quickest || quickest == 0) {
-        quickest = seconds;
+        quickest = (al_get_timer_count(timer)+seconds);
         al_draw_bitmap(medal, 260, 10,NULL);
     }
 
@@ -128,7 +128,8 @@ void determineBeathighscores(ALLEGRO_BITMAP *medal, ALLEGRO_TIMER *timer, int sc
 
 }
 
-int calculateUnltimateScore(int score, int seconds, ALLEGRO_TIMER *timer){
+int calculateUnltimateScore(int score, int seconds, ALLEGRO_TIMER *timer)
+{
 
 
     return score+ (240- (seconds+al_get_timer_count(timer)))*100;
@@ -136,17 +137,18 @@ int calculateUnltimateScore(int score, int seconds, ALLEGRO_TIMER *timer){
 
 }
 
-void startNewgame(Decks c[], int &movesCounter, int &seconds, int &score, ALLEGRO_TIMER *timer, ALLEGRO_TIMER *pauseTimer, ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, ALLEGRO_EVENT_QUEUE *event_queue){
+void startNewgame(Decks c[], int &movesCounter, int &seconds, int &score, ALLEGRO_TIMER *timer, ALLEGRO_TIMER *pauseTimer, ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, ALLEGRO_EVENT_QUEUE *event_queue)
+{
 
-                            movesCounter = 0;
-                            seconds = 0;
-                            score = 0;
+    movesCounter = 0;
+    seconds = 0;
+    score = 0;
 
-                            al_set_timer_count(timer, 0);
-                            al_stop_timer(pauseTimer);
-                            al_start_timer(timer);
-                            cardInfodistribution(c);
-                            dealCardsIn(c, card, background, event_queue);
+    al_set_timer_count(timer, 0);
+    al_stop_timer(pauseTimer);
+    al_start_timer(timer);
+    cardInfodistribution(c);
+    dealCardsIn(c, card, background, event_queue);
 
 }
 
