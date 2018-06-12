@@ -59,6 +59,9 @@ struct Decks {
 
 };
 
+
+
+
 void initializeAllegro();
 void createCards(Decks c[], ALLEGRO_BITMAP *card, int largestLayer);
 void cardInfodistribution (Decks c[]);
@@ -101,7 +104,6 @@ void resetPlayareacardsInfo(Decks c[]);
 void resetBackupcardsInfo(Decks c[]);
 void rearrageFiles(FILE *writeInsave, FILE *writeInscore, FILE *readInsave, FILE *readInscore);
 int fixScore(int score);
-int fixSeconds(ALLEGRO_TIMER *timer, int seconds);
 void firstCardstack(Decks c[], int i, int j);
 void firstCardreturn(Decks c[], int i);
 void followCardstack(Decks c[], int i, int j);
@@ -117,7 +119,7 @@ void determineBeathighscores(ALLEGRO_BITMAP *medal, ALLEGRO_TIMER *timer, int sc
 int calculateUnltimateScore(int score, int movesCounter, int seconds, ALLEGRO_TIMER *timer);
 void startNewgame(Decks c[], int &movesCounter, int &seconds, int &score, ALLEGRO_TIMER *timer, ALLEGRO_TIMER *pauseTimer,  ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, ALLEGRO_EVENT_QUEUE *event_queue);
 int calculateExtraspace(int seconds, ALLEGRO_TIMER *timer);
-
+int fixMinutes(ALLEGRO_TIMER *timer, int seconds);
 
 
 

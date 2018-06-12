@@ -1,7 +1,7 @@
 
 #include "CardStruct.h"
 
-//called in main: deal cards
+//deal cards
 void cardInfodistribution (Decks c[])
 {
 
@@ -25,7 +25,7 @@ void cardInfodistribution (Decks c[])
     cardSuitremoveAnddistribute(c,fourSuits,suitsDealt);
 }
 
-//called in main and autoComplete: determine the largest Layer
+//determine the largest Layer
 void determineLargestlayer(Decks c[], int &largestLayer)
 {
     int i = 0;
@@ -67,7 +67,7 @@ void createCards(Decks c[], ALLEGRO_BITMAP *card, int largestLayer)
     }
 }
 
-//called in main: controls the cards' movement
+//controls the cards' movement
 void cardMovements(Decks c[],ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_MOUSE_STATE &state, ALLEGRO_EVENT events, bool &cardMoving, int &largestLayer, bool &mouseOnbackup, int &movesCounter,  int &score)
 {
 
@@ -206,7 +206,7 @@ void cardMovements(Decks c[],ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_MOUSE_STA
 }
 
 
-//called in main and other functions involving restarting the game: print the cards on screen at the start of the game
+//print the cards on screen at the start of the game
 void dealCardsIn(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, ALLEGRO_EVENT_QUEUE *event_queue)
 {
 
@@ -313,7 +313,7 @@ void dealCardsIn(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, AL
     }
 }
 
-//called in main: reveal the cards in play area after user moved the card on top of it and stacked it
+//reveal the cards in play area after user moved the card on top of it and stacked it
 void revealCard(Decks c[])
 {
 
@@ -330,7 +330,7 @@ void revealCard(Decks c[])
     }
 }
 
-//called in main: auto complete the game
+//auto complete the game
 int autoComplete(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, ALLEGRO_TIMER *timer, ALLEGRO_FONT *font, int &largestLayer, int &score, int &movesCounter, int &seconds, ALLEGRO_DISPLAY *display)
 {
 
