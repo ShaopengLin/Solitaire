@@ -7,7 +7,7 @@ void cardNumberremove(Decks c[], int &numbersDealt, int i, int thirteenNumbers[]
 {
     int temp;
 
-    //number
+    //distribute numbers
     if (c[0].counterNumber[c[i].number] == 4) {
 
         for (int j = 0; j < 13; j++) {
@@ -76,12 +76,15 @@ void determinestackable(Decks c[], int i, int j)
         if ((c[j].suit % 2) != (c[i].suit % 2)) {
 
             if (c[j].number == c[i].number + 1) {
-                if (c[i].column.numbers > COLUMNA && c[j].column.numbers > COLUMNA){
 
-                }
-                else{
+                if (c[i].column.numbers > COLUMNA && c[j].column.numbers > COLUMNA) {
+
+
+
+                }else{
                     c[j].stackable = true;
                 }
+
             }
         }
     }
@@ -103,14 +106,16 @@ void firstCardfixposition(Decks c[], int i, int &movesCounter)
 
                     if (c[j].stackable) {
 
-
+                        //renew the information of the card and stack it
                         firstCardstack(c,i,j);
 
                         movesCounter++;
 
 
-                    }else{
+                    } else {
+
                         c[i].returnOrigin = true;
+
                     }
 
                 }
@@ -137,23 +142,16 @@ void followCardfixposition(Decks c[], int i)
                 // determine if the dragging card has stacked
                 if(c[i].column.numbers == c[j].column.numbers) {
 
-                    printf("returned\n");
-
+                    //return the cards that are following to their original position
                     followCardreturn(c, i, j);
 
-                // return to original position
+                    // return to original position
                 } else {
 
-                    printf("followed\n");
+                    //renew the followed cards information and stack them
                     followCardstack(c, i, j);
 
                 }
-            }
-
-            if (c[j].follow == true) {
-
-                printf("%d\n", c[j].layer.numbers);
-
             }
 
             c[j].follow = false;
@@ -162,6 +160,7 @@ void followCardfixposition(Decks c[], int i)
     }
 }
 
+//reset information for cards in play area
 void resetPlayareacardsInfo(Decks c[])
 {
 
@@ -177,6 +176,7 @@ void resetPlayareacardsInfo(Decks c[])
     }
 }
 
+//return the unmoved cards back to their original position
 void resetBackupcardsInfo(Decks c[])
 {
 

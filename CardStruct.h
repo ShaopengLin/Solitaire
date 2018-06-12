@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 #include <allegro.h>
 #include <allegro_native_dialog.h>
 #include <allegro_font.h>
@@ -62,7 +63,6 @@ struct Decks {
 
 
 void initializeAllegro();
-void printb(ALLEGRO_BITMAP *background);
 void createCards(Decks c[], ALLEGRO_BITMAP *card, int largestLayer);
 void cardInfodistribution (Decks c[]);
 void cardSuitremoveAnddistribute(Decks c[], int fourSuits[], int suitsDealt);
@@ -81,7 +81,7 @@ bool cardHitbox(Decks c[], int i, int j);
 bool kHitbox(Decks c[], int i, int j);
 bool aHitbox(Decks c[], int i, int j);
 bool determineWon(Decks c[]);
-int manageBackupcard(Decks c[], int &largestLayer, int &movesCounter ,int &score);
+int manageBackupcard(Decks c[], int &largestLayer, int &movesCounter,int &score);
 void drawMinutes(ALLEGRO_FONT *font, ALLEGRO_TIMER *timer, int seconds);
 void drawSeconds(ALLEGRO_FONT *font,ALLEGRO_TIMER *timer, int seconds);
 void drawMovescount(ALLEGRO_FONT *font, int movesCounter);
@@ -96,14 +96,14 @@ void saveTofile(Decks c[],FILE *writeInsave, FILE *writeInscore, ALLEGRO_TIMER *
 bool pauseHitbox(ALLEGRO_EVENT events);
 void drawPausescreen(Decks c[],ALLEGRO_BITMAP *pauseButton, ALLEGRO_BITMAP *pasueScreen);
 bool resumeHitbox(ALLEGRO_EVENT events);
-bool startHitbox(ALLEGRO_EVENT events);
+bool restartHitbox(ALLEGRO_EVENT events);
 void resumeGame(Decks c[], ALLEGRO_BITMAP *pauseButton, ALLEGRO_BITMAP *pauseScreen, ALLEGRO_TIMER *timer,ALLEGRO_TIMER * pauseTimer, ALLEGRO_BITMAP *resume);
 void drawNewgamePressed(Decks c[], ALLEGRO_BITMAP *pauseButton, ALLEGRO_BITMAP *pauseScreen, ALLEGRO_BITMAP *newGame);
 int readFromfile(Decks c[],ALLEGRO_DISPLAY *display,FILE *readInsave, FILE *readInscore, ALLEGRO_TIMER *timer, int &seconds, int &score, int &movesCounter, char saved[]);
 void resetPlayareacardsInfo(Decks c[]);
 void resetBackupcardsInfo(Decks c[]);
 void rearrageFiles(FILE *writeInsave, FILE *writeInscore, FILE *readInsave, FILE *readInscore);
-void fixScore(int &score);
+int fixScore(int score);
 void firstCardstack(Decks c[], int i, int j);
 void firstCardreturn(Decks c[], int i);
 void followCardstack(Decks c[], int i, int j);
@@ -116,9 +116,10 @@ int autoComplete(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, AL
 void animationAutocomplete(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, ALLEGRO_TIMER *timer, ALLEGRO_FONT *font, int i, int j, int largestLayer, int &score, int &movesCounter, int &seconds);
 void winningScreen(Decks c[], ALLEGRO_BITMAP *winScreen);
 void determineBeathighscores(ALLEGRO_BITMAP *medal, ALLEGRO_TIMER *timer, int score, int &highScore, int seconds, int &quickest, int movesCounter, int &leastMove);
-int calculateUnltimateScore(int score, int seconds, ALLEGRO_TIMER *timer);
+int calculateUnltimateScore(int score, int movesCounter, int seconds, ALLEGRO_TIMER *timer);
 void startNewgame(Decks c[], int &movesCounter, int &seconds, int &score, ALLEGRO_TIMER *timer, ALLEGRO_TIMER *pauseTimer,  ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, ALLEGRO_EVENT_QUEUE *event_queue);
-
+int calculateExtraspace(int seconds, ALLEGRO_TIMER *timer);
+int fixMinutes(ALLEGRO_TIMER *timer, int seconds);
 
 
 

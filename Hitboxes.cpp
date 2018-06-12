@@ -27,6 +27,7 @@ bool cardHitbox(Decks c[], int i, int j)
     }
 }
 
+//determine if the card user is dragging is in a K's hit box
 bool kHitbox(Decks c[], int i, int j)
 {
 
@@ -53,6 +54,7 @@ bool kHitbox(Decks c[], int i, int j)
     }
 }
 
+//determine if the card user is dragging is in a A's hit box
 bool aHitbox(Decks c[], int i, int j)
 {
 
@@ -79,6 +81,7 @@ bool aHitbox(Decks c[], int i, int j)
     }
 }
 
+//determine if the user have won
 bool determineWon(Decks c[])
 {
 
@@ -92,17 +95,18 @@ bool determineWon(Decks c[])
 
         return true;
 
-    }
-    else {
+    } else {
 
         return false;
 
     }
 }
 
-bool pauseHitbox(ALLEGRO_EVENT events){
+//determine if the user hit the pause button
+bool pauseHitbox(ALLEGRO_EVENT events)
+{
 
-     if (events.mouse.x >= PAUSEx && events.mouse.x <= PAUSEx + 126 && events.mouse.y >= PAUSEy && events.mouse.y <= PAUSEy+35) {
+    if (events.mouse.x >= PAUSEx && events.mouse.x <= PAUSEx + 126 && events.mouse.y >= PAUSEy && events.mouse.y <= PAUSEy+35) {
 
         return true;
 
@@ -113,7 +117,9 @@ bool pauseHitbox(ALLEGRO_EVENT events){
     }
 }
 
-bool resumeHitbox(ALLEGRO_EVENT events){
+//determine if the user hit the resume button
+bool resumeHitbox(ALLEGRO_EVENT events)
+{
 
 
     if (events.mouse.x >= RESUMEx && events.mouse.x <= RESUMEx + 200 && events.mouse.y >= RESUMEy && events.mouse.y <= RESUMEy+40) {
@@ -127,9 +133,11 @@ bool resumeHitbox(ALLEGRO_EVENT events){
     }
 }
 
-bool startHitbox(ALLEGRO_EVENT events){
+//determine if the user hit the restart button
+bool restartHitbox(ALLEGRO_EVENT events)
+{
 
-    if (events.mouse.x >= NEWGAMEx && events.mouse.x <= NEWGAMEx + 200 && events.mouse.y >= NEWGAMEy && events.mouse.y <= NEWGAMEy+40){
+    if (events.mouse.x >= NEWGAMEx && events.mouse.x <= NEWGAMEx + 200 && events.mouse.y >= NEWGAMEy && events.mouse.y <= NEWGAMEy+40) {
 
         return true;
 

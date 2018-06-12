@@ -15,20 +15,25 @@ int main(int argc, char *argv[])
     //initialize display
     display = al_create_display(ScreenWidth, ScreenHeight);
 
+    //create file pointers for reading and writings
     FILE *readInsave = fopen("savefile.txt", "r");
     FILE *writeInsave = fopen("replacesave.txt", "w");
     FILE *readInscore = fopen("scorefile.txt", "r");
     FILE *writeInscore = fopen("replacescore.txt", "w");
 
+    //create fonts
     ALLEGRO_FONT *font = al_load_font("Roboto-Medium.ttf",20,NULL);
     ALLEGRO_FONT *startingFont = al_load_font("Hug Me Tight - TTF.ttf", 40, NULL);
+
+    //create event queue
     ALLEGRO_EVENT_QUEUE *event_queue = al_create_event_queue();
-    ALLEGRO_EVENT_QUEUE *pause_queue = al_create_event_queue();
+
+    //create timers
     ALLEGRO_TIMER *timer = al_create_timer(1.0/FPS);
     ALLEGRO_TIMER *pauseTimer = al_create_timer(1.0/FPS);
 
+    //register event sources
     al_register_event_source(event_queue, al_get_display_event_source(display));
-    al_register_event_source(pause_queue, al_get_display_event_source(display));
     al_register_event_source(event_queue, al_get_mouse_event_source());
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
 
@@ -51,8 +56,6 @@ int main(int argc, char *argv[])
     //initialize randomizer
     srand(time(NULL));
 
-
-
     Decks cards[52];
     bool done = false, cardMoving = false, mouseOnbackup = false, asked = false;
     char saved[10];
@@ -62,16 +65,21 @@ int main(int argc, char *argv[])
     int score = 0;
     int highScore = 0, quickest = 0, leastMove = 0;
 
+    //rewind files
     rewind(readInsave);
     rewind(readInscore);
+
+    //scan for high scores
     fscanf(readInscore, "%d", &quickest);
     fscanf(readInscore, "%d", &highScore);
     fscanf(readInscore, "%d", &leastMove);
     fscanf(readInscore, "%s", saved);
 
+    //read save file, if no file, show start screen
     if (readFromfile(cards, display,readInsave, readInscore,timer,seconds, score, movesCounter, saved) != 0) {
 
-        al_draw_text(startingFont, al_map_rgb(255,255,255), 150, ScreenHeight/2, NULL, "Tap to Start");
+        //draw start screen
+        al_draw_text(startingFont, al_map_rgb(255,255,255), 150, ScreenHeight/2, NULL, "Click to Start");
         al_flip_display();
         al_clear_to_color(al_map_rgb(0,0,0));
 
@@ -80,19 +88,22 @@ int main(int argc, char *argv[])
             ALLEGRO_EVENT events;
             al_wait_for_event(event_queue, &events);
 
-
+            // close the program
             if(events.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
 
             return 0;
 
-
             }
             al_get_mouse_state(&state);
+
+            //when clicked on screen, start the game
             if (al_mouse_button_down(&state, state.buttons & 1)){
+
                 al_rest(0.2);
                 //distribute information to the 52 cards
                 cardInfodistribution(cards);
                 dealCardsIn(cards, card, background, event_queue);
+
                 break;
             }
         }
@@ -100,6 +111,7 @@ int main(int argc, char *argv[])
 
     //Actual Game
 
+    //determine the total amount of layers
     determineLargestlayer(cards,largestLayer);
     al_start_timer(timer);
 
@@ -107,31 +119,29 @@ int main(int argc, char *argv[])
         ALLEGRO_EVENT events;
         al_wait_for_event(event_queue, &events);
 
+        //ask the user once if they want to auto complete
         if (!asked) {
+
+                //auto complete the game
             if (autoComplete(cards,card,background,timer,font,largestLayer,score,movesCounter,seconds,display) == 2) {
 
                 asked = true;
             }
         }
 
+
         if(determineWon(cards)){
 
+        //stop the main game timer and start the pause screen timer to not affect in game time count
         al_stop_timer(timer);
 
         al_start_timer(pauseTimer);
 
-        score = calculateUnltimateScore(score, seconds, timer);
+        //calculate the score based on how much time the user used
+        score = calculateUnltimateScore(score,movesCounter, seconds, timer);
 
-        /*while (1){
-        al_wait_for_event(event_queue, &events);
-        if(events.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
-
-            done = true;
-            break;
-
-        }*/
-
-        printb(background);
+        //draw the needed game screens
+        al_draw_bitmap(background,0,0,NULL);
 
         drawMinutes(font,timer,seconds);
 
@@ -143,37 +153,46 @@ int main(int argc, char *argv[])
 
         createCards(cards, card, largestLayer);
 
+        //determine if the user has beaten his history high scores
         determineBeathighscores(medal, timer,score, highScore,seconds, quickest, movesCounter, leastMove);
 
+        //draw the winning screen
         winningScreen(cards, winScreen);
 
         al_flip_display();
         al_clear_to_color(al_map_rgb(0,0,0));
 
+        //ask the user if want to play again
         if (al_show_native_message_box(display,"Message", "Do you want to play again?", "Yes to replay, No to quit", NULL, ALLEGRO_MESSAGEBOX_YES_NO)== 1){
+
+        //restart the game
         startNewgame(cards, movesCounter, seconds, score, timer, pauseTimer,card, background, event_queue);
         }
         else {
         }
         }
 
-
+        //exit the game
         done = determineWon(cards);
 
 
         //if clicked X button top right
         if(events.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
 
+            //exit the game
             done = true;
 
         }
 
         al_get_mouse_state(&state);
 
+
         if (al_mouse_button_down(&state, state.buttons & 1)) {
 
+            //if user clicked the pause button
             if (pauseHitbox(events)) {
 
+                //stop the main game timer and start the pause screen timer to not affect in game time count
                 al_stop_timer(timer);
 
                 al_start_timer(pauseTimer);
@@ -182,17 +201,16 @@ int main(int argc, char *argv[])
 
                     al_wait_for_event(event_queue, &events);
 
+                    //exit program if pressed close
                     if(events.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
-
-                        al_start_timer(timer);
-                        al_stop_timer(pauseTimer);
 
                         done = true;
                         break;
 
                     }
 
-                    printb(background);
+                    //draw game screens
+                    al_draw_bitmap(background,0,0,NULL);
 
                     drawMinutes(font,timer,seconds);
 
@@ -205,22 +223,30 @@ int main(int argc, char *argv[])
                     createCards(cards, card, largestLayer);
 
                     al_get_mouse_state(&state);
+
+
                     if(al_mouse_button_down(&state, state.buttons & 1)) {
 
+                        //if the user hit resume button
                         if(resumeHitbox(events) == true) {
 
+                            //resume the game
                             resumeGame(cards, pauseButton, pauseScreen, timer, pauseTimer,resume);
                             break;
 
-                        } else if(startHitbox(events)) {
+                        //if the user hit restart button
+                        } else if(restartHitbox(events)) {
 
+                            //animation of newGame button
                             drawNewgamePressed(cards, pauseButton, pauseScreen,newGame);
 
+                            //restart the game
                             startNewgame(cards, movesCounter, seconds, score, timer, pauseTimer,card, background, event_queue);
                             break;
                         }
                     }
 
+                    //draws the pause screen
                     drawPausescreen(cards, pauseButton, pauseScreen);
 
                     al_flip_display();
@@ -235,13 +261,15 @@ int main(int argc, char *argv[])
         determineLargestlayer(cards,largestLayer);
 
         //print back ground
-        printb(background);
+        al_draw_bitmap(background,0,0,NULL);
 
+        //reveal the cards in play area after user moved the card on top of it and stacked it
         revealCard(cards);
 
         //draws the 52 cards
         createCards(cards, card, largestLayer);
 
+        //draw the high scores, time counts, and move counts on top
         drawMinutes(font,timer,seconds);
 
         drawSeconds(font, timer, seconds);
@@ -257,9 +285,10 @@ int main(int argc, char *argv[])
         al_clear_to_color(al_map_rgb(0,0,0));
     }
 
-
+    //save scores and game data in to the save and score file
     saveTofile(cards, writeInsave, writeInscore, timer, seconds,quickest,score,highScore,movesCounter,leastMove);
 
+    //rename and delete files
     rearrageFiles(writeInsave, writeInscore, readInsave, readInscore);
 
     //destroy pointers

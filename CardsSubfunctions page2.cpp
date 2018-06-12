@@ -8,8 +8,8 @@ void changeCardsstate(Decks c[], bool &cardMoving, int largestLayer, int i)
 
     //if a card is already moving
     if (cardMoving == true) {
-        ;
-    } else {
+
+    } if (cardMoving == false) {
 
         for (j = 0; j < 52; j++) {
 
@@ -19,6 +19,7 @@ void changeCardsstate(Decks c[], bool &cardMoving, int largestLayer, int i)
 
                     if (c[j].layer.numbers > c[i].layer.numbers) {
 
+                        //back up information for the cards that are over the dragged card for following
                         makeCardfollow(c,j, largestLayer);
 
                     }
@@ -26,7 +27,7 @@ void changeCardsstate(Decks c[], bool &cardMoving, int largestLayer, int i)
             }
         }
 
-        // back information for the card user is dragging
+        // back up information for the card user is dragging
         cardMoving = allowCardtomove(c, i, largestLayer);
 
     }
@@ -35,14 +36,14 @@ void changeCardsstate(Decks c[], bool &cardMoving, int largestLayer, int i)
 //called in cardMovement: controls the distribution and animation of the backup deck
 int manageBackupcard(Decks c[], int &largestLayer, int &movesCounter, int &score)
 {
+
     ALLEGRO_BITMAP *background = al_load_bitmap("background.png");
     ALLEGRO_BITMAP *card = al_load_bitmap("cards.png");
+
     int cardsLeft = 1;
     bool skipCard = false;
 
-    printf("%d", c[c[0].backupDeck.totalLayer].column.numbers);
-    //reveal the cards to the user
-
+    //if no cards are left in the back up deck
     if (c[0].backupDeck.totalLayer > 27) {
 
         // check if back up card is in play area, if so, skip it.
@@ -61,10 +62,11 @@ int manageBackupcard(Decks c[], int &largestLayer, int &movesCounter, int &score
             }
         }
 
+        //reveal the cards to the user
         c[c[0].backupDeck.totalLayer].revealed = true;
         c[c[0].backupDeck.totalLayer].x -= (float)75;
 
-        printb(background);
+        al_draw_bitmap(background,0,0,NULL);
 
         createCards(c,card,largestLayer);
         movesCounter++;
@@ -80,11 +82,13 @@ int manageBackupcard(Decks c[], int &largestLayer, int &movesCounter, int &score
 
     }
 
+    //destroy the local bitmaps
     al_destroy_bitmap(background);
     al_destroy_bitmap(card);
 
 }
 
+//called in cardMovement: stack the K cards when moved to the K position
 void columnKfixposition(Decks c[], int i, int &movesCounter)
 {
     int j = 1;
@@ -96,7 +100,7 @@ void columnKfixposition(Decks c[], int i, int &movesCounter)
 
                 if (c[j].layer.totalLayer == 0) {
 
-                    printf("K\n");
+                    //renew the information of the K card and stack it
                     c[i].x = c[j].column.dimensionx;
                     c[i].y = c[j].column.dimensiony;
                     c[i].layer.numbers = 1;
@@ -111,9 +115,12 @@ void columnKfixposition(Decks c[], int i, int &movesCounter)
     }
 }
 
+//called in cardMovement: stack the cards when moved to the A position
 int columnAfixposition(Decks c[], int i, int &movesCounter, int &score)
 {
     int j = 0;
+
+    //loop between the four A positions
     for (j = 0; j < 4; j++) {
 
         if(aHitbox(c,i,j)) {
@@ -126,6 +133,7 @@ int columnAfixposition(Decks c[], int i, int &movesCounter, int &score)
 
                         for (int k = 0; k < 52; k++) {
 
+                            //would not stack a card if one or more card is following
                             if (c[k].follow == true) {
 
                                 return 0;
@@ -133,28 +141,37 @@ int columnAfixposition(Decks c[], int i, int &movesCounter, int &score)
                             }
                         }
 
+                        //stack cards that are not A to the A position
                         stackNonAcardonA(c, i, j);
                         movesCounter++;
+
+                        //if the card has already scored, it would not score again
                         if(!c[i].scored) {
                             score += 10;
                             c[i].scored = true;
                         }
                     }
+
                 } else {
 
+                    //stack the A card to the A position
                     stackAcardonA(c, i, j);
-
                     movesCounter++;
+
+                    //if the card has already scored, it would not score again
                     if(!c[i].scored) {
+
                         score += 10;
                         c[i].scored = true;
-                    }
 
+                    }
                 }
             }
         }
     }
 }
+
+//called in firstCardfixposition: renew the information of the card and stack it
 void firstCardstack(Decks c[], int i, int j)
 {
 
@@ -169,6 +186,7 @@ void firstCardstack(Decks c[], int i, int j)
 
 }
 
+//called in firstCardfixposition: return the card to its original position
 void firstCardreturn(Decks c[], int i)
 {
     if (c[i].returnOrigin == true) {
@@ -182,6 +200,7 @@ void firstCardreturn(Decks c[], int i)
 
 }
 
+//called in followCardfixposition: return the cards that are following to their original position
 void followCardreturn(Decks c[], int i, int j)
 {
     c[j].x = c[j].originx;
@@ -191,6 +210,7 @@ void followCardreturn(Decks c[], int i, int j)
     c[j].y = c[i].y + (c[j].layer.origin - c[i].layer.origin)*30;
 }
 
+//called in followCardfixposition: renew the followed cards information and stack them
 void followCardstack(Decks c[], int i, int j)
 {
     c[c[j].column.numbers].layer.totalLayer--;
@@ -202,6 +222,7 @@ void followCardstack(Decks c[], int i, int j)
 
 }
 
+//called in changeCardsstate: back up card information to let it follow the dragged card
 void makeCardfollow(Decks c[], int j, int largestLayer)
 {
 
@@ -213,6 +234,7 @@ void makeCardfollow(Decks c[], int j, int largestLayer)
 
 }
 
+//called in changeCardsstate: back up dragging card's information and let it be dragged
 bool allowCardtomove(Decks c[], int i, int largestLayer)
 {
     c[i].originx = c[i].x;
@@ -222,6 +244,8 @@ bool allowCardtomove(Decks c[], int i, int largestLayer)
     c[i].layer.numbers += largestLayer;
     return true;
 }
+
+//called in columnAfixposition: stack cards that are not A to the A position
 void stackNonAcardonA(Decks c[], int i, int j)
 {
     printf("A\n");
@@ -235,6 +259,7 @@ void stackNonAcardonA(Decks c[], int i, int j)
 
 }
 
+//called in columnAfixposition: stack the A card to the A position
 void stackAcardonA(Decks c[], int i, int j)
 {
 
@@ -251,15 +276,14 @@ void stackAcardonA(Decks c[], int i, int j)
 
 }
 
+//called in autoComplete: draw the animation of the card that is being auto completed
 void animationAutocomplete(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, ALLEGRO_TIMER *timer, ALLEGRO_FONT *font, int i, int j, int largestLayer, int &score, int &movesCounter, int &seconds)
 {
 
     float moveSpeedx, moveSpeedy;
 
-
+    //calculate the move speed of the card being completed
     moveSpeedx = (c[i].x - (Ax+(j*75)))/10;
-
-
     moveSpeedy = (c[i].y - Ay)/10;
 
     for (int k = 0; k < 10; k++) {
@@ -268,7 +292,7 @@ void animationAutocomplete(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *back
         c[i].y -= moveSpeedy;
 
 
-        printb(background);
+        al_draw_bitmap(background,0,0,NULL);
 
         drawMinutes(font,timer,seconds);
 
