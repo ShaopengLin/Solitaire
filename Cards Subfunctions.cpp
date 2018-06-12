@@ -160,7 +160,7 @@ void followCardfixposition(Decks c[], int i)
     }
 }
 
-//reset information for cards in play area
+//called in dealCardsin: reset information for cards in play area
 void resetPlayareacardsInfo(Decks c[])
 {
 
@@ -176,7 +176,7 @@ void resetPlayareacardsInfo(Decks c[])
     }
 }
 
-//return the unmoved cards back to their original position
+//called in manageBackupdeck: return the unmoved cards back to their original position
 void resetBackupcardsInfo(Decks c[])
 {
 

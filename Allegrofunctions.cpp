@@ -1,6 +1,6 @@
 #include "CardStruct.h"
 
-//initialize allegro
+//called in main: initialize allegro
 void initializeAllegro()
 {
     al_init();
@@ -12,14 +12,14 @@ void initializeAllegro()
 
 }
 
-// draw the seconds on the screen
+//called in main: draw the seconds on the screen
 void drawSeconds(ALLEGRO_FONT *font, ALLEGRO_TIMER *timer, int seconds)
 {
 
     char cseconds[4];
 
     //add up the timer and the seconds in save file, and set restrictions
-    seconds = fixMinutes(timer, seconds);
+    seconds = fixSeconds(timer, seconds);
 
     //put the value of seconds into a string
     sprintf(cseconds,"%d",seconds - 60*(seconds/60));
@@ -28,13 +28,13 @@ void drawSeconds(ALLEGRO_FONT *font, ALLEGRO_TIMER *timer, int seconds)
 
 }
 
-//draw the minutes on the screen
+//called in main: draw the minutes on the screen
 void drawMinutes(ALLEGRO_FONT *font, ALLEGRO_TIMER *timer, int seconds)
 {
     char cminutes[4];
 
     //add up the timer and the seconds in save file, and set restrictions
-    seconds = fixMinutes(timer, seconds);
+    seconds = fixSeconds(timer, seconds);
 
     //put value of seconds into a string
     sprintf(cminutes,"%d",seconds/60);
@@ -45,7 +45,7 @@ void drawMinutes(ALLEGRO_FONT *font, ALLEGRO_TIMER *timer, int seconds)
 
 }
 
-//draw move made on screen
+//called in main: draw move made on screen
 void drawMovescount(ALLEGRO_FONT *font, int movesCounter)
 {
     char cMovesCounter[10];
@@ -57,7 +57,7 @@ void drawMovescount(ALLEGRO_FONT *font, int movesCounter)
 
 }
 
-//draw score on screen
+//called in main: draw score on screen
 void drawScore(ALLEGRO_FONT *font, int &score)
 {
     char cScore[10];
@@ -72,7 +72,7 @@ void drawScore(ALLEGRO_FONT *font, int &score)
 
 }
 
-//draw the pause screen
+//called in main and some functions in the pause part: draw the pause screen
 void drawPausescreen(Decks c[], ALLEGRO_BITMAP *pauseButton, ALLEGRO_BITMAP *pauseScreen)
 {
 
@@ -82,7 +82,7 @@ void drawPausescreen(Decks c[], ALLEGRO_BITMAP *pauseButton, ALLEGRO_BITMAP *pau
 
 }
 
-//resume the game
+//called in main: resume the game
 void resumeGame(Decks c[], ALLEGRO_BITMAP *pauseButton, ALLEGRO_BITMAP *pauseScreen, ALLEGRO_TIMER *timer,ALLEGRO_TIMER * pauseTimer, ALLEGRO_BITMAP *resume)
 {
 
@@ -96,7 +96,7 @@ void resumeGame(Decks c[], ALLEGRO_BITMAP *pauseButton, ALLEGRO_BITMAP *pauseScr
 
 }
 
-//animation for pressing new game
+//called in main: animation for pressing new game
 void drawNewgamePressed(Decks c[], ALLEGRO_BITMAP *pauseButton, ALLEGRO_BITMAP *pauseScreen, ALLEGRO_BITMAP *newGame)
 {
 
@@ -109,7 +109,7 @@ void drawNewgamePressed(Decks c[], ALLEGRO_BITMAP *pauseButton, ALLEGRO_BITMAP *
 
 }
 
-//score cannot be lower than 0
+//called in drawScore: score cannot be lower than 0
 int fixScore(int score)
 {
 
@@ -121,8 +121,8 @@ int fixScore(int score)
 
 }
 
-//set maximum time that can be shown
-int fixMinutes(ALLEGRO_TIMER *timer, int seconds)
+//called in drawSeconds and drawMinutes: set maximum time that can be shown
+int fixSeconds(ALLEGRO_TIMER *timer, int seconds)
 {
 
     //if time used is over 999 minutes
@@ -136,7 +136,7 @@ int fixMinutes(ALLEGRO_TIMER *timer, int seconds)
 
     }
 }
-// draw the win screen
+//called in main: draw the win screen
 void winningScreen(Decks c[], ALLEGRO_BITMAP *winScreen)
 {
 
@@ -144,7 +144,7 @@ void winningScreen(Decks c[], ALLEGRO_BITMAP *winScreen)
 
 }
 
-//determine if the user has beaten the highscore and draws a medal
+//called in main: determine if the user has beaten the highscore and draws a medal
 void determineBeathighscores(ALLEGRO_BITMAP *medal, ALLEGRO_TIMER *timer, int score, int &highScore, int seconds, int &quickest, int movesCounter, int &leastMove)
 {
 
@@ -168,7 +168,7 @@ void determineBeathighscores(ALLEGRO_BITMAP *medal, ALLEGRO_TIMER *timer, int sc
     }
 }
 
-//calculate the score relative to the time used
+//called in main: calculate the score relative to the time used
 int calculateUnltimateScore(int score, int movesCounter, int seconds, ALLEGRO_TIMER *timer)
 {
 
@@ -176,7 +176,7 @@ int calculateUnltimateScore(int score, int movesCounter, int seconds, ALLEGRO_TI
 
 }
 
-//reset the nessecery states and restart the game
+//called in main: reset the nessecery states and restart the game
 void startNewgame(Decks c[], int &movesCounter, int &seconds, int &score, ALLEGRO_TIMER *timer, ALLEGRO_TIMER *pauseTimer, ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, ALLEGRO_EVENT_QUEUE *event_queue)
 {
 
@@ -194,7 +194,7 @@ void startNewgame(Decks c[], int &movesCounter, int &seconds, int &score, ALLEGR
 
 }
 
-//calculate the extra space if minutes are to increase,
+//called in drawSeconds and drawMinutes: calculate the extra space if minutes are to increase,
 int calculateExtraspace(int seconds, ALLEGRO_TIMER *timer)
 {
         if (seconds + al_get_timer_count(timer) >= 6*pow(10, 3)){

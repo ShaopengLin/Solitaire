@@ -2,44 +2,44 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Debug" />
-	<File name="Cards Subfunctions.cpp" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="3" zoom_2="0">
+	<File name="Allegrofunctions.cpp" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="4608" topLine="155" />
+			<Cursor1 position="5237" topLine="138" />
 		</Cursor>
 	</File>
-	<File name="CardsSubfunctions page2.cpp" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="Cardsfunctions.cpp" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1693" topLine="35" />
+			<Cursor1 position="736" topLine="208" />
+		</Cursor>
+	</File>
+	<File name="Cards Subfunctions.cpp" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="3" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="4276" topLine="160" />
+		</Cursor>
+	</File>
+	<File name="Hitboxes.cpp" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3565" topLine="107" />
+		</Cursor>
+	</File>
+	<File name="SolitaireMain.cpp" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="4" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="4431" topLine="11" />
 		</Cursor>
 	</File>
 	<File name="fileFunctions.cpp" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="23" topLine="78" />
+			<Cursor1 position="3519" topLine="72" />
 		</Cursor>
 	</File>
-	<File name="Allegrofunctions.cpp" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="CardsSubfunctions page2.cpp" open="1" top="1" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2847" topLine="95" />
-		</Cursor>
-	</File>
-	<File name="Cardsfunctions.cpp" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="5849" topLine="201" />
-		</Cursor>
-	</File>
-	<File name="SolitaireMain.cpp" open="1" top="1" tabpos="8" split="0" active="1" splitpos="0" zoom_1="4" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="6477" topLine="269" />
-		</Cursor>
-	</File>
-	<File name="Hitboxes.cpp" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="3437" topLine="105" />
+			<Cursor1 position="8473" topLine="261" />
 		</Cursor>
 	</File>
 	<File name="CardStruct.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="3489" topLine="83" />
+			<Cursor1 position="2098" topLine="27" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>
