@@ -1,4 +1,5 @@
-
+//Chris Lin    ICS3U    Lindsay Cullum    June 12, 2018
+//This program is a space themed version of the classical game solitaire.
 #include "CardStruct.h"
 
 int main(int argc, char *argv[])
@@ -39,7 +40,7 @@ int main(int argc, char *argv[])
 
     //initialize background, card, back of card spritesheet
     ALLEGRO_BITMAP *background = al_load_bitmap("background.png");
-    ALLEGRO_BITMAP *card = al_load_bitmap("cards.png");
+    ALLEGRO_BITMAP *cardBitmap = al_load_bitmap("cards.png");
     ALLEGRO_BITMAP *pauseButton = al_load_bitmap("pause.png");
     ALLEGRO_BITMAP *pauseScreen = al_load_bitmap("pausescreen.png");
     ALLEGRO_BITMAP *newGame = al_load_bitmap("newgame.png");
@@ -57,7 +58,7 @@ int main(int argc, char *argv[])
     srand(time(NULL));
 
     Decks cards[52];
-    bool done = false, cardMoving = false, mouseOnbackup = false, asked = false;
+    bool done = false, cardMoving = false, mouseOnbackup = false, askedForautocomplete = false;
     char saved[10];
     int largestLayer = 0;
     int seconds = 0;
@@ -91,18 +92,18 @@ int main(int argc, char *argv[])
             // close the program
             if(events.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
 
-            return 0;
+                return 0;
 
             }
             al_get_mouse_state(&state);
 
             //when clicked on screen, start the game
-            if (al_mouse_button_down(&state, state.buttons & 1)){
+            if (al_mouse_button_down(&state, state.buttons & 1)) {
 
                 al_rest(0.2);
                 //distribute information to the 52 cards
                 cardInfodistribution(cards);
-                dealCardsIn(cards, card, background, event_queue);
+                dealCardsIn(cards, cardBitmap, background, event_queue);
 
                 break;
             }
@@ -120,56 +121,55 @@ int main(int argc, char *argv[])
         al_wait_for_event(event_queue, &events);
 
         //ask the user once if they want to auto complete
-        if (!asked) {
+        if (!askedForautocomplete) {
 
-                //auto complete the game
-            if (autoComplete(cards,card,background,timer,font,largestLayer,score,movesCounter,seconds,display) == 2) {
+            //auto complete the game
+            if (autoComplete(cards,cardBitmap,background,timer,font,largestLayer,score,movesCounter,seconds,display) == 2) {
 
-                asked = true;
+                askedForautocomplete = true;
             }
         }
 
 
-        if(determineWon(cards)){
+        if(determineWon(cards)) {
 
-        //stop the main game timer and start the pause screen timer to not affect in game time count
-        al_stop_timer(timer);
+            //stop the main game timer and start the pause screen timer to not affect in game time count
+            al_stop_timer(timer);
 
-        al_start_timer(pauseTimer);
+            al_start_timer(pauseTimer);
 
-        //calculate the score based on how much time the user used
-        score = calculateUnltimateScore(score,movesCounter, seconds, timer);
+            //calculate the score based on how much time the user used
+            score = calculateUnltimateScore(score,movesCounter, seconds, timer);
 
-        //draw the needed game screens
-        al_draw_bitmap(background,0,0,NULL);
+            //draw the needed game screens
+            al_draw_bitmap(background,0,0,NULL);
 
-        drawMinutes(font,timer,seconds);
+            drawMinutes(font,timer,seconds);
 
-        drawSeconds(font, timer, seconds);
+            drawSeconds(font, timer, seconds);
 
-        drawMovescount(font,movesCounter);
+            drawMovescount(font,movesCounter);
 
-        drawScore(font, score);
+            drawScore(font, score);
 
-        createCards(cards, card, largestLayer);
+            createCards(cards, cardBitmap, largestLayer);
 
-        //determine if the user has beaten his history high scores
-        determineBeathighscores(medal, timer,score, highScore,seconds, quickest, movesCounter, leastMove);
+            //determine if the user has beaten his history high scores
+            determineBeathighscores(medal, timer,score, highScore,seconds, quickest, movesCounter, leastMove);
 
-        //draw the winning screen
-        winningScreen(cards, winScreen);
+            //draw the winning screen
+            winningScreen(cards, winScreen);
 
-        al_flip_display();
-        al_clear_to_color(al_map_rgb(0,0,0));
+            al_flip_display();
+            al_clear_to_color(al_map_rgb(0,0,0));
 
-        //ask the user if want to play again
-        if (al_show_native_message_box(display,"Message", "Do you want to play again?", "Yes to replay, No to quit", NULL, ALLEGRO_MESSAGEBOX_YES_NO)== 1){
+            //ask the user if want to play again
+            if (al_show_native_message_box(display,"Message", "Do you want to play again?", "Yes to replay, No to quit", NULL, ALLEGRO_MESSAGEBOX_YES_NO)== 1) {
 
-        //restart the game
-        startNewgame(cards, movesCounter, seconds, score, timer, pauseTimer,card, background, event_queue);
-        }
-        else {
-        }
+                //restart the game
+                startNewgame(cards, movesCounter, seconds, score, timer, pauseTimer, cardBitmap, background, event_queue);
+            } else {
+            }
         }
 
         //exit the game
@@ -220,7 +220,7 @@ int main(int argc, char *argv[])
 
                     drawScore(font, score);
 
-                    createCards(cards, card, largestLayer);
+                    createCards(cards, cardBitmap, largestLayer);
 
                     al_get_mouse_state(&state);
 
@@ -234,14 +234,14 @@ int main(int argc, char *argv[])
                             resumeGame(cards, pauseButton, pauseScreen, timer, pauseTimer,resume);
                             break;
 
-                        //if the user hit restart button
+                            //if the user hit restart button
                         } else if(restartHitbox(events)) {
 
                             //animation of newGame button
                             drawNewgamePressed(cards, pauseButton, pauseScreen,newGame);
 
                             //restart the game
-                            startNewgame(cards, movesCounter, seconds, score, timer, pauseTimer,card, background, event_queue);
+                            startNewgame(cards, movesCounter, seconds, score, timer, pauseTimer, cardBitmap, background, event_queue);
                             break;
                         }
                     }
@@ -267,7 +267,7 @@ int main(int argc, char *argv[])
         revealCard(cards);
 
         //draws the 52 cards
-        createCards(cards, card, largestLayer);
+        createCards(cards, cardBitmap, largestLayer);
 
         //draw the high scores, time counts, and move counts on top
         drawMinutes(font,timer,seconds);
@@ -295,7 +295,8 @@ int main(int argc, char *argv[])
     al_destroy_font(font);
     al_destroy_display(display);
     al_destroy_bitmap(background);
-    al_destroy_bitmap(card);
+    al_destroy_bitmap(cardBitmap);
     al_destroy_timer(timer);
+
     return 0;
 }

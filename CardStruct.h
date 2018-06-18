@@ -39,6 +39,7 @@ struct Position {
 struct Decks {
 
     int number = 0;
+
     //1 = spades 2 = hearts, 3 = clubs, 4 = diamonds
     int suit = {0};
     int counterNumber[14] = {0};
@@ -59,15 +60,12 @@ struct Decks {
 
 };
 
-
-
-
 void initializeAllegro();
-void createCards(Decks c[], ALLEGRO_BITMAP *card, int largestLayer);
+void createCards(Decks c[], ALLEGRO_BITMAP *cardBitmap, int largestLayer);
 void cardInfodistribution (Decks c[]);
 void cardSuitremoveAnddistribute(Decks c[], int fourSuits[], int suitsDealt);
 void cardNumberremove(Decks c[], int &numbersDealt, int i, int thirteenNumbers[]);
-void dealCardsIn(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, ALLEGRO_EVENT_QUEUE *event_queue);
+void dealCardsIn(Decks c[], ALLEGRO_BITMAP *cardBitmap, ALLEGRO_BITMAP *background, ALLEGRO_EVENT_QUEUE *event_queue);
 void cardMovements(Decks c[],ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_MOUSE_STATE &state, ALLEGRO_EVENT events, bool &cardMoving, int &largestLayer, bool &mouseOnbackup, int &movesCounter, int &score);
 void determineLargestlayer(Decks c[], int &largestLayer);
 int columnAfixposition(Decks c[], int i, int &movesCounter, int &score);
@@ -104,6 +102,7 @@ void resetPlayareacardsInfo(Decks c[]);
 void resetBackupcardsInfo(Decks c[]);
 void rearrageFiles(FILE *writeInsave, FILE *writeInscore, FILE *readInsave, FILE *readInscore);
 int fixScore(int score);
+int fixSeconds(ALLEGRO_TIMER *timer, int seconds);
 void firstCardstack(Decks c[], int i, int j);
 void firstCardreturn(Decks c[], int i);
 void followCardstack(Decks c[], int i, int j);
@@ -112,14 +111,14 @@ void makeCardfollow(Decks c[], int j, int largestLayer);
 bool allowCardtomove(Decks c[], int i, int largestLayer);
 void stackAcardonA(Decks c[], int i, int j);
 void stackNonAcardonA(Decks c[], int i, int j);
-int autoComplete(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, ALLEGRO_TIMER *timer, ALLEGRO_FONT *font, int &largestLayer, int &score, int &movesCounter, int &seconds,ALLEGRO_DISPLAY *display);
-void animationAutocomplete(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, ALLEGRO_TIMER *timer, ALLEGRO_FONT *font, int i, int j, int largestLayer, int &score, int &movesCounter, int &seconds);
+int autoComplete(Decks c[], ALLEGRO_BITMAP *cardBitmap, ALLEGRO_BITMAP *background, ALLEGRO_TIMER *timer, ALLEGRO_FONT *font, int &largestLayer, int &score, int &movesCounter, int &seconds,ALLEGRO_DISPLAY *display);
+void animationAutocomplete(Decks c[], ALLEGRO_BITMAP *cardBitmap, ALLEGRO_BITMAP *background, ALLEGRO_TIMER *timer, ALLEGRO_FONT *font, int i, int j, int largestLayer, int &score, int &movesCounter, int &seconds);
 void winningScreen(Decks c[], ALLEGRO_BITMAP *winScreen);
 void determineBeathighscores(ALLEGRO_BITMAP *medal, ALLEGRO_TIMER *timer, int score, int &highScore, int seconds, int &quickest, int movesCounter, int &leastMove);
 int calculateUnltimateScore(int score, int movesCounter, int seconds, ALLEGRO_TIMER *timer);
-void startNewgame(Decks c[], int &movesCounter, int &seconds, int &score, ALLEGRO_TIMER *timer, ALLEGRO_TIMER *pauseTimer,  ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, ALLEGRO_EVENT_QUEUE *event_queue);
+void startNewgame(Decks c[], int &movesCounter, int &seconds, int &score, ALLEGRO_TIMER *timer, ALLEGRO_TIMER *pauseTimer,  ALLEGRO_BITMAP *cardBitmap, ALLEGRO_BITMAP *background, ALLEGRO_EVENT_QUEUE *event_queue);
 int calculateExtraspace(int seconds, ALLEGRO_TIMER *timer);
-int fixMinutes(ALLEGRO_TIMER *timer, int seconds);
+
 
 
 

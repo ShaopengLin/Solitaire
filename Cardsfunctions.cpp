@@ -1,7 +1,7 @@
 
 #include "CardStruct.h"
 
-//deal cards
+//called in main: giving cards random suits and numbers
 void cardInfodistribution (Decks c[])
 {
 
@@ -25,12 +25,13 @@ void cardInfodistribution (Decks c[])
     cardSuitremoveAnddistribute(c,fourSuits,suitsDealt);
 }
 
-//determine the largest Layer
+//called in main and autoComplete: determine the largest Layer in the game currently
 void determineLargestlayer(Decks c[], int &largestLayer)
 {
     int i = 0;
     largestLayer = c[0].layer.numbers;
 
+    //the card with the largest layer number becomes the largest layer
     for (i = 0; i < 52; i++) {
 
         if (c[i].layer.numbers > largestLayer) {
@@ -41,8 +42,8 @@ void determineLargestlayer(Decks c[], int &largestLayer)
     }
 }
 
-//draws the 52 cards constantly depending on their layering
-void createCards(Decks c[], ALLEGRO_BITMAP *card, int largestLayer)
+//called almost everywhere that needs to draw the screen: draws the 52 cards constantly depending on their layering and states(revealed, not revealed)
+void createCards(Decks c[], ALLEGRO_BITMAP *cardBitmap, int largestLayer)
 {
     int i = 0, j = 1;
 
@@ -53,13 +54,13 @@ void createCards(Decks c[], ALLEGRO_BITMAP *card, int largestLayer)
 
             if (c[i].layer.numbers == j) {
 
-                if (c[i].revealed) {
+                if (c[i].revealed) { //draws the bitmap representing front of the card
 
-                    al_draw_bitmap_region(card, (c[i].number - 1) * 70, (c[i].suit -1) * 100, 70, 100,c[i].x, c[i].y, NULL);
+                    al_draw_bitmap_region(cardBitmap, (c[i].number - 1) * 70, (c[i].suit -1) * 100, 70, 100,c[i].x, c[i].y, NULL);
 
-                } else {
+                } else { // draws the bitmap representing back of the card
 
-                    al_draw_bitmap_region(card,910, 300, 70, 100,c[i].x,c[i].y, NULL);
+                    al_draw_bitmap_region(cardBitmap,910, 300, 70, 100,c[i].x,c[i].y, NULL);
 
                 }
             }
@@ -67,7 +68,7 @@ void createCards(Decks c[], ALLEGRO_BITMAP *card, int largestLayer)
     }
 }
 
-//controls the cards' movement
+//called in main: controls the cards' movement when dragging, containing lots of other functions that implement the rules when dragging
 void cardMovements(Decks c[],ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_MOUSE_STATE &state, ALLEGRO_EVENT events, bool &cardMoving, int &largestLayer, bool &mouseOnbackup, int &movesCounter,  int &score)
 {
 
@@ -84,6 +85,7 @@ void cardMovements(Decks c[],ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_MOUSE_STA
                 //if the card is revealed to the user
                 if (c[i].revealed == true) {
 
+                    //because hit box in cards overlap with each other, this piece of code determines exactly which card the user want to click
                     for (j = 0; j < 52; j++) {
 
                         if (j != i) {
@@ -92,7 +94,7 @@ void cardMovements(Decks c[],ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_MOUSE_STA
 
                                 if (events.mouse.x >= c[j].x && events.mouse.x <= c[j].x + 70 && events.mouse.y >= c[j].y && events.mouse.y <= c[j].y+100) {
 
-                                    if(c[j].layer.numbers > c[i].layer.numbers) {
+                                    if(c[j].layer.numbers > c[i].layer.numbers) { //if there are still cards on top of card i, then, card i is not the one user is trying to drag therefore skipped.
 
                                         //the card has cards on top of it
                                         firstLayer = false;
@@ -102,13 +104,16 @@ void cardMovements(Decks c[],ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_MOUSE_STA
                             }
                         }
                     }
+
+
                     if(firstLayer == true) {
 
-                        //determine if there are more cards under the card that the user is dragging and back up information for both while changing their state
+                        //determine if there are more cards on top of the card that the user is dragging and back up information for both while changing their state
                         changeCardsstate(c, cardMoving, largestLayer, i);
 
                     } else {
 
+                        //reset value for loop
                         firstLayer = true;
 
                     }
@@ -166,7 +171,7 @@ void cardMovements(Decks c[],ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_MOUSE_STA
 
         }
 
-        //move with the mouse's displacement and the following cards moves with the dragging card
+        //restrictions to prevent user dragging the card out side the screen
         if(c[i].moving == true) {
 
             if (c[i].x > ScreenWidth) {
@@ -183,15 +188,17 @@ void cardMovements(Decks c[],ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_MOUSE_STA
 
             } else if(c[i].y > ScreenHeight) {
 
-                c[i].y = ScreenWidth;
+                c[i].y = ScreenHeight;
 
             } else {
 
+                //move with the mouse's displacement and the following cards moves with the dragging card
                 c[i].x += events.mouse.dx;
                 c[i].y += events.mouse.dy;
 
             }
 
+            //movement for the cards that are following the dragged card
             for (j = 0; j< 52; j++) {
 
                 if (c[j].follow) {
@@ -206,8 +213,8 @@ void cardMovements(Decks c[],ALLEGRO_EVENT_QUEUE *event_queue, ALLEGRO_MOUSE_STA
 }
 
 
-//print the cards on screen at the start of the game
-void dealCardsIn(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, ALLEGRO_EVENT_QUEUE *event_queue)
+//called in main and other functions involving restarting the game: print the cards on screen at the start of the game
+void dealCardsIn(Decks c[], ALLEGRO_BITMAP *cardBitmap, ALLEGRO_BITMAP *background, ALLEGRO_EVENT_QUEUE *event_queue)
 {
 
 
@@ -265,8 +272,6 @@ void dealCardsIn(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, AL
             c[i].x -= moveSpeedx;
             c[i].y -= moveSpeedy;
 
-
-
             //because x and y is float, fixing the card's position might be nessecery
             if(j == 14) {
 
@@ -289,11 +294,11 @@ void dealCardsIn(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, AL
 
                 if (c[k].revealed) {
 
-                    al_draw_bitmap_region(card, (c[k].number - 1) * 70, (c[k].suit -1) * 100, 70, 100,c[k].x, c[k].y, NULL);
+                    al_draw_bitmap_region(cardBitmap, (c[k].number - 1) * 70, (c[k].suit -1) * 100, 70, 100,c[k].x, c[k].y, NULL);
 
                 } else {
 
-                    al_draw_bitmap_region(card, 910, 300, 70, 100,c[k].x,c[k].y, NULL);
+                    al_draw_bitmap_region(cardBitmap, 910, 300, 70, 100,c[k].x,c[k].y, NULL);
 
                 }
             }
@@ -313,9 +318,10 @@ void dealCardsIn(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, AL
     }
 }
 
-//reveal the cards in play area after user moved the card on top of it and stacked it
+//called in main: reveal the cards in play area after user moved the card on top of it and stacked it
 void revealCard(Decks c[])
 {
+
 
     for (int i = 0; i < 28; i++) {
 
@@ -330,8 +336,8 @@ void revealCard(Decks c[])
     }
 }
 
-//auto complete the game
-int autoComplete(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, ALLEGRO_TIMER *timer, ALLEGRO_FONT *font, int &largestLayer, int &score, int &movesCounter, int &seconds, ALLEGRO_DISPLAY *display)
+//called in main: auto complete the game
+int autoComplete(Decks c[], ALLEGRO_BITMAP *cardBitmap, ALLEGRO_BITMAP *background, ALLEGRO_TIMER *timer, ALLEGRO_FONT *font, int &largestLayer, int &score, int &movesCounter, int &seconds, ALLEGRO_DISPLAY *display)
 {
 
     //would not let user auto complete if there are non revealed cards or if there are still cards left in the back up deck
@@ -342,7 +348,6 @@ int autoComplete(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, AL
             return 0;
 
         }
-
     }
 
     //ask the user if they want to auto complete the game
@@ -367,13 +372,12 @@ int autoComplete(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, AL
                                     determineLargestlayer(c, largestLayer);
 
                                     //animation for the card
-                                    animationAutocomplete(c, card,background,timer,font,i,j,largestLayer,score,movesCounter,seconds);
+                                    animationAutocomplete(c, cardBitmap,background,timer,font,i,j,largestLayer,score,movesCounter,seconds);
 
                                     //stack the A card to the A position
                                     stackAcardonA(c, i, j);
 
                                     score += 10;
-
 
                                 } else {
 
@@ -382,14 +386,12 @@ int autoComplete(Decks c[], ALLEGRO_BITMAP *card, ALLEGRO_BITMAP *background, AL
                                     determineLargestlayer(c, largestLayer);
 
                                     //animation for the card
-                                    animationAutocomplete(c, card,background,timer,font,i,j,largestLayer,score,movesCounter,seconds);
+                                    animationAutocomplete(c, cardBitmap,background,timer,font,i,j,largestLayer,score,movesCounter,seconds);
 
                                     //stack the cards that are not A to the A position
                                     stackNonAcardonA(c, i, j);
 
                                     score += 10;
-
-
                                 }
                             }
                         }

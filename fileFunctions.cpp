@@ -43,11 +43,13 @@ void writeHighscore(FILE *writeInscore, int highScore)
     fprintf(writeInscore, "%d\n", highScore);
 }
 
-//writes high scores and necessery save data to into two files
+//called in main: writes high scores and necessery save data to into two files
 void saveTofile(Decks c[],FILE *writeInsave, FILE *writeInscore, ALLEGRO_TIMER *timer, int seconds, int quickest, int score, int highScore, int movesCounter, int  leastMove)
 {
+    //if won, only write the high scores
     if (determineWon(c)) {
 
+        //change quickest when user beats it
         if (seconds < quickest || quickest == 0) {
 
             writeSeconds(writeInscore, timer,seconds);
@@ -57,6 +59,8 @@ void saveTofile(Decks c[],FILE *writeInsave, FILE *writeInscore, ALLEGRO_TIMER *
             writeQuickest(writeInscore, quickest);
 
         }
+
+        //change highscore when user beats it
         if (score > highScore) {
 
             writeScore(writeInscore, score);
@@ -66,6 +70,8 @@ void saveTofile(Decks c[],FILE *writeInsave, FILE *writeInscore, ALLEGRO_TIMER *
             writeHighscore(writeInscore, highScore);
 
         }
+
+        //change leastMove when user beats it
         if (movesCounter < leastMove || leastMove == 0) {
 
             writeMoves(writeInscore, movesCounter);
@@ -76,18 +82,24 @@ void saveTofile(Decks c[],FILE *writeInsave, FILE *writeInscore, ALLEGRO_TIMER *
 
         }
 
-    } else {
+    }
 
+    //if not, write in everything including high scores
+    else {
+
+        //write high scores
         writeQuickest(writeInscore, quickest);
         writeHighscore(writeInscore, highScore);
         writeLeastmove(writeInscore, leastMove);
 
+        //only save when user made a change to the game
         if (movesCounter != 0) {
 
             fprintf(writeInscore, "%s\n", "saved");
 
         }
 
+        //write current scores
         writeSeconds(writeInscore, timer, seconds);
         writeScore(writeInscore, score);
         writeMoves(writeInscore, movesCounter);
@@ -101,7 +113,7 @@ void saveTofile(Decks c[],FILE *writeInsave, FILE *writeInscore, ALLEGRO_TIMER *
     }
 }
 
-//read saved data from files
+//called in main: read saved data from files
 int readFromfile(Decks c[],ALLEGRO_DISPLAY *display, FILE *readInsave, FILE *readInscore, ALLEGRO_TIMER *timer, int &seconds, int &score, int &movesCounter, char saved[])
 {
     //if there is saved data
@@ -120,9 +132,13 @@ int readFromfile(Decks c[],ALLEGRO_DISPLAY *display, FILE *readInsave, FILE *rea
 
             }
 
+            //exit
             return 0;
 
-        } else {
+        }
+
+        //if user does not want to load save
+        else {
 
             return 1;
 
@@ -130,7 +146,7 @@ int readFromfile(Decks c[],ALLEGRO_DISPLAY *display, FILE *readInsave, FILE *rea
     }
 }
 
-//rename and remove files
+//called in main: rename and remove files
 void rearrageFiles(FILE *writeInsave, FILE *writeInscore, FILE *readInsave, FILE *readInscore)
 {
 
