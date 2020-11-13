@@ -40,3 +40,35 @@
 1528739923 source:c:\users\admin\desktop\game\hitboxes.cpp
 	"CardStruct.h"
 
+1529001021 source:c:\users\admin\desktop\version\solitaire\allegrofunctions.cpp
+	"CardStruct.h"
+
+1528919027 c:\users\admin\desktop\version\solitaire\cardstruct.h
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	<math.h>
+	<allegro.h>
+	<allegro_native_dialog.h>
+	<allegro_font.h>
+	<allegro_ttf.h>
+	<allegro_image.h>
+
+1529000785 source:c:\users\admin\desktop\version\solitaire\cardsfunctions.cpp
+	"CardStruct.h"
+
+1528766987 source:c:\users\admin\desktop\version\solitaire\cardssubfunctions page2.cpp
+	"CardStruct.h"
+
+1528824998 source:c:\users\admin\desktop\version\solitaire\filefunctions.cpp
+	"CardStruct.h"
+
+1528743523 source:c:\users\admin\desktop\version\solitaire\hitboxes.cpp
+	"CardStruct.h"
+
+1556295281 source:c:\users\admin\desktop\version\solitaire\solitairemain.cpp
+	"CardStruct.h"
+
+1528768060 source:c:\users\admin\desktop\version\solitaire\cards subfunctions.cpp
+	"CardStruct.h"
+

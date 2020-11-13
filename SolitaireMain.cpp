@@ -84,30 +84,7 @@ int main(int argc, char *argv[])
         al_flip_display();
         al_clear_to_color(al_map_rgb(0,0,0));
 
-        while (1) {
 
-            ALLEGRO_EVENT events;
-            al_wait_for_event(event_queue, &events);
-
-            // close the program
-            if(events.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
-
-                return 0;
-
-            }
-            al_get_mouse_state(&state);
-
-            //when clicked on screen, start the game
-            if (al_mouse_button_down(&state, state.buttons & 1)) {
-
-                al_rest(0.2);
-                //distribute information to the 52 cards
-                cardInfodistribution(cards);
-                dealCardsIn(cards, cardBitmap, background, event_queue);
-
-                break;
-            }
-        }
     }
 
     //Actual Game
